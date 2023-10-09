@@ -1,4 +1,4 @@
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View, Text,ImageBackground} from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
 import {useSelector} from 'react-redux';
 import {FlashList} from '@shopify/flash-list';
@@ -51,26 +51,29 @@ export default function HomeTab() {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={localStyles.contentContainerStyle}
       />
-
-      <View style={localStyles.bottomClock}>
+       {/* <ImageBackground
+  source={require('/SaifApp/saifApp/android/app/src/main/res/drawable/splash_logo.png')} // Replace with the actual image path
+  style={localStyles.backgroundImage}
+> */}
+      {/* <View style={localStyles.bottomClock}>
         <View style={localStyles.btnContainer}>
-            <View style={{flexDirection:'row', color:colors.white,alignItems:'center'}}>
+            <View style={{flexDirection:'row', color:colors.primary5,alignItems:'center'}}>
               <Clock />
               <View style={{marginLeft:10}}>
-                <EText type="m14" numberOfLines={1} color={colors.white}>Monday</EText>
-                <EText type="m16" numberOfLines={1} color={colors.white}>14 Aug 2023</EText>
+                <EText type="m14" numberOfLines={1} color={colors.primary5}>Monday</EText>
+                <EText type="m16" numberOfLines={1} color={colors.primary5}>14 Aug 2023</EText>
               </View>
             </View>
             <View style={{flexDirection:'row', color:colors.white,alignItems:'center'}}>
               <Clock />
               <View style={{marginLeft:10}}>
-                <EText type="m14" numberOfLines={1} color={colors.white}>Shift</EText>
-                <EText type="m16" numberOfLines={1} color={colors.white}>10:00AM - 00:00</EText>
+                <EText type="m14" numberOfLines={1} color={colors.primary5}>Shift</EText>
+                <EText type="m16" numberOfLines={1} color={colors.primary5}>10:00AM - 00:00</EText>
               </View>
             </View>
         </View>
         <View style={localStyles.centeredTextContainer}>
-    <EText type="m20" numberOfLines={1} color={colors.white}>
+    <EText type="m20" numberOfLines={1} color={colors.primary5}>
       <Clock /> 2h : 32m : 22s
     </EText>
   </View>
@@ -92,9 +95,10 @@ export default function HomeTab() {
           />
       </View>
       </View>
-          
-      
+           */}
+      {/* </ImageBackground>  */}
     </View>
+    
   );
 }
 
@@ -102,13 +106,19 @@ const RenderHeaderItem = React.memo(() => {
   return (
     <View>
       <HomeHeader />
-      <View style={localStyles.card}>
-        <View style={localStyles.left}>
-          <EText type="m16" numberOfLines={1} color={colors.textColor}> Create Attendance </EText>
-          <Text>Click on Day Clock In or Night Clock In button to generate attendance</Text>
-        </View>
-        <Caledar />
-      </View>
+      <ImageBackground
+  source={require('/SaifApp/saifApp/android/app/src/main/res/drawable/splash_logo.png')} // Replace with the actual image path
+  style={localStyles.backgroundImage}
+>
+  <View style={localStyles.card}>
+    <View style={localStyles.left}>
+      <EText type="m16" numberOfLines={1} color={colors.textColor}> Create Booking </EText>
+      <EText color={colors.textColor} >Click create booking icon to book your slots for maximum 1 week.</EText>
+    </View>
+    <Caledar />
+  </View>
+</ImageBackground>
+
     </View>
   );
 });
@@ -119,7 +129,7 @@ const localStyles = StyleSheet.create({
     ...styles.pb20,
   },
   card:{
-    backgroundColor:'#FEE4D8',
+    // backgroundColor:'grey',
     display:'flex',
     justifyContent:'space-between',
     flexDirection:'row',
@@ -129,7 +139,7 @@ const localStyles = StyleSheet.create({
     maxWidth: '70%',
   },
   bottomClock:{
-    backgroundColor:'#FA7547',
+    // backgroundColor:'grey',
     ...styles.pv30,
     ...styles.ph30,
   },
@@ -142,6 +152,12 @@ const localStyles = StyleSheet.create({
     justifyContent:'space-between',
     ...styles.mv15,
   },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // You can adjust this to 'contain' or other values as needed
+    justifyContent: 'center',
+  },
+  
   skipBtnContainer: {
     width: '45%',
   },

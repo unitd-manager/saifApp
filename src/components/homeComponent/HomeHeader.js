@@ -98,7 +98,7 @@ function HomeHeader({user}) {
        <View style={localStyles.headerContainer}>            
         <View style={localStyles.textContainer}>
           <EText type="m16" numberOfLines={1} color={colors.textColor}>
-            Hii Fatema
+            Hi Fatema
           </EText>
           <EText type="B20" numberOfLines={1} color={colors.textColor}>
            Welcome Back {user && user.first_name} 

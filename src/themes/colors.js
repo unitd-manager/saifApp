@@ -1,8 +1,8 @@
 //App colors
 const LightColor = {
   light: 'light',
-  backgroundColor: '#FA7547',
-  textColor: '#212121',
+  backgroundColor: '#163a71',
+  textColor: '#163a71',
   textRevertColor: '#FFFFFF',
   btnColor3: '#EEEEEE',
   inputBg: '#FAFAFA',

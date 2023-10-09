@@ -167,14 +167,14 @@ const ViewAttendace = () => {
                   <Calender />
                   <View>
                     <Text style={Attendancestyles.subHeading}>Friday</Text>
-                    <Text style={Attendancestyles.heading}>4 Aug 2023</Text>
+                    <Text style={Attendancestyles.heading}>13 Aug 2023</Text>
                   </View>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <CardClock />
                   <View>
-                    <Text style={Attendancestyles.subHeading}>Total</Text>
-                    <Text style={Attendancestyles.heading}>9:00:00</Text>
+                    <Text style={Attendancestyles.subHeading}>Total Hour</Text>
+                    <Text style={Attendancestyles.heading}>3:00:00</Text>
                   </View>
                 </View>
               </View>
@@ -186,14 +186,7 @@ const ViewAttendace = () => {
                     <Text style={Attendancestyles.subHeading}>Check In</Text>
                   </View>
                   <Text style={Attendancestyles.heading}>10:00 AM</Text>
-                </View>
-
-                <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <View>
-                    <CheckIn />
-                    <Text style={Attendancestyles.subHeading}>Check Out</Text>
-                  </View>
-                  <Text style={Attendancestyles.heading}>07:00 PM</Text>
+                  <CheckIn />
                 </View>
               </View>
             </InnerContainer>
@@ -297,12 +290,12 @@ const ViewAttendace = () => {
 
   const getMarked = () => {
     let marked = {};
-    for (let i = 4; i <= 6; i++) {
+    for (let i = 12; i <= 20; i++) {
       let day = i.toString().padStart(2, '0');
-      marked[`2023-08-${day}`] = {
-        startingDay: i == 4,
-        endingDay: i == 6,
-        color: '#FF9A7F',
+      marked[`2023-8-${day}`] = {
+        startingDay: i == 13,
+        endingDay: i == 19,
+        color: '#163a71',
         textColor: '#fff',
         disabled: true,
       };
@@ -312,12 +305,12 @@ const ViewAttendace = () => {
 
   return (
     <View>
-      <EHeader title={'Attendance Report'} />
+      <EHeader title={'Booking'} />
 
       <View
         style={{
           flexDirection: 'row',
-          backgroundColor: '#FF9A7F',
+          backgroundColor: 'grey',
           justifyContent: 'space-around',
           padding: 10,
         }}>
@@ -333,7 +326,7 @@ const ViewAttendace = () => {
             setLayOut('monthly');
           }}
           style={Attendancestyles.head}>
-          <Text style={{color: '#fff', fontWeight: '600'}}>Monthly</Text>
+          <Text style={{color: '#fff', fontWeight: '600'}}>Weekly</Text>
         </TouchableRipple>
       </View>
       <ScrollView style={{padding: 15}}>{renderLayout()}</ScrollView>

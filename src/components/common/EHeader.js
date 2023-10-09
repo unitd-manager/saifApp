@@ -48,6 +48,6 @@ const localStyles = StyleSheet.create({
     ...styles.ph20,
     ...styles.pv20,
     ...styles.center,
-    backgroundColor:'#FA7547',
+    backgroundColor:'#163a71',
   },
 });

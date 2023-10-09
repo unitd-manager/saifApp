@@ -30,27 +30,27 @@ const popularEventData = [
   {
     id: 1,
     image: images.attendance,
-    title: 'Attendance',
+    title: ' Create Booking',
     url: 'ViewAttendace'
   },
   {
     id: 2,
     image: images.leave,
-    title: 'Leaves',
+    title: 'Booked History',
     url: 'RequestLeave'
   },
-  {
-    id: 3,
-    image: images.payroll,
-    title: 'Payroll',
-    url: 'ViewPayroll'
-  },
-  {
-    id: 4,
-    image: images.holiday,
-    title: 'Holidays',
-    url: 'ViewHolidays'
-  },
+  // {
+  //   id: 3,
+  //   image: images.payroll,
+  //   title: 'Payroll',
+  //   url: 'ViewPayroll'
+  // },
+  // {
+  //   id: 4,
+  //   image: images.holiday,
+  //   title: 'Holidays',
+  //   url: 'ViewHolidays'
+  // },
 
 ];
 
@@ -97,9 +97,9 @@ const Earnings = [
 ];
 
 const LeaveType = [
-  { id: '1',label:'Casual Leave', value: 'casual leave', },
-  { id: '2',label:'Sick Leave', value: 'sick leave',},
-  { id: '3',label:'Annual Leave', value: 'annual leave', }, 
+  { id: '1',label:'Court 1', value: 'Court 2', },
+  { id: '2',label:'Court 2', value: 'Court 2',},
+  
 ];
 
 const ProfileSetting = [

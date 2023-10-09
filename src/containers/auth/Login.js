@@ -1,5 +1,5 @@
 // Library Imports
-import {StyleSheet, View, TouchableOpacity, Alert} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Alert,ImageBackground} from 'react-native';
 import React, {useEffect, useState, useContext} from 'react';
 import {useSelector} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -23,15 +23,15 @@ const Login = () => {
 
   const BlurredStyle = {
     // backgroundColor: colors.inputBg,
-    borderColor: colors.white,
+    borderColor: colors.primary5,
   };
   const FocusedStyle = {
     // backgroundColor: colors.white,
-    borderColor: colors.white,
+    borderColor: colors.primary5,
   };
 
-  const BlurredIconStyle = colors.white;
-  const FocusedIconStyle = colors.white;
+  const BlurredIconStyle = colors.primary5;
+  const FocusedIconStyle = colors.primary5;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -75,7 +75,7 @@ const Login = () => {
   };
 
   const EmailIcon = () => {
-    return <Ionicons name="mail" size={moderateScale(20)} color={emailIcon} />;
+    return <Ionicons name="mail" size={moderateScale(20)} color={'black'} />;
   };
 
   const onFocusEmail = () => {
@@ -91,7 +91,7 @@ const Login = () => {
     <Ionicons
       name="lock-closed"
       size={moderateScale(20)}
-      color={passwordIcon}
+      color={'black'}
     />
   );
 
@@ -110,7 +110,7 @@ const Login = () => {
       <Ionicons
         name={isPasswordVisible ? 'eye-off' : 'eye'}
         size={moderateScale(20)}
-        color={passwordIcon}
+        color={'black'}
       />
     </TouchableOpacity>
   );
@@ -140,22 +140,25 @@ const Login = () => {
   return (
     <ESafeAreaView style={localStyles.root}>
         <KeyBoardAvoidWrapper contentContainerStyle={{flex:1}}>
-
+        <ImageBackground
+          source={require('../../../android/app/src/main/res/drawable/splash_login.jpg')}
+          style={localStyles.backgroundImage}
+>
         <View style={localStyles.mainContainer}>
 
           <View style={[localStyles.loginBg]}>
          
-            <EText type="B35" numberOfLines={1} color={colors.textRevertColor}  style={[styles.mv20, styles.selfCenter]}>
+            <EText type="B35" numberOfLines={1} color={colors.primary5}  style={[styles.mv20, styles.selfCenter]}>
             Login
             </EText>
 
             <EInput
               placeHolder={strings.email}
-              placeholderTextColor={colors.white}
+              placeholderTextColor={colors.primary5}
               keyBoardType={'email-address'}
               _value={email}
               _errorText={emailError}
-              errorStyle={colors.white}
+              errorStyle={colors.primary5}
               autoCapitalize={'none'}
               insideLeftIcon={() => <EmailIcon />}
               toGetTextFieldValue={onChangedEmail}
@@ -170,7 +173,7 @@ const Login = () => {
 
             <EInput
               placeHolder={strings.password}
-              placeholderTextColor={colors.white}
+              placeholderTextColor={colors.primary5}
               keyBoardType={'default'}
               _value={password}
               _errorText={passwordError}
@@ -194,12 +197,12 @@ const Login = () => {
               color={isSubmitDisabled && colors.white}
               containerStyle={localStyles.signBtnContainer}
               onPress={onPressSignWithPassword}
-              bgColor={isSubmitDisabled && colors.backgroundColor3}
+              bgColor={isSubmitDisabled && colors.primary5}
             />
 
           </View>
         </View>
-
+        </ImageBackground>
 
         </KeyBoardAvoidWrapper>
        
@@ -228,17 +231,22 @@ const localStyles = StyleSheet.create({
     borderLeftWidth:moderateScale(0),
     borderRightWidth:moderateScale(0),
     borderRadius:0,
-    color:colors.white
+    color:colors.primary5
+  },
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover', // You can adjust this to 'contain' or other values as needed
+    justifyContent: 'center',
   },
   inputBoxStyle: {
     ...styles.ph15,
   },
   root:{
-    flex:1,
+    flex:3,
     justifyContent:'center',
     flexDirection:'column',
    alignContent:'center',
-    backgroundColor:'#FA7547',
+    backgroundColor:'white',
   },
   loginBg:{
     ...styles.ph30,

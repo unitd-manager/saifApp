@@ -62,7 +62,7 @@ const RequestLeave = (props) => {
 
   return (
     <View style={{backgroundColor: '#fafafa', flex: 1}}>
-      <EHeader title={'Request Leave'} />
+      <EHeader title={'Booked History'} />
       <View style={localStyles.contentContainerStyle}>
 
         <EInput
@@ -94,7 +94,7 @@ const RequestLeave = (props) => {
           maxHeight={moderateScale(180)}
           labelField="label"
           valueField="value"
-          placeholder="Leave Type"
+          placeholder="Court"
           value={leaveType}
           itemTextStyle={{
             color: colors.textColor,
