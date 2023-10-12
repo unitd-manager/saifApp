@@ -89,7 +89,7 @@ export default EInput = props => {
             {color: colors.white},
             {height: multiline ? getHeight(75) : getHeight(50)},
             inputBoxStyle,
-            _editable == false && {color: colors.placeHolderColor},
+            _editable == false && {color: "#222"},
           ]}
           {...props}
         />
@@ -104,7 +104,7 @@ export default EInput = props => {
           style={{
             ...localStyle.errorText,
             ...errorStyle,
-            color: colors.white,
+            color: "#222",
           }}>
           {_errorText}
         </EText>

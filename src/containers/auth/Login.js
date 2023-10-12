@@ -26,7 +26,7 @@ const Login = () => {
     borderColor: colors.primary5,
   };
   const FocusedStyle = {
-    // backgroundColor: colors.white,
+    backgroundColor: colors.inputFocusColor,
     borderColor: colors.primary5,
   };
 
@@ -148,9 +148,10 @@ const Login = () => {
 
           <View style={[localStyles.loginBg]}>
          
-            <EText type="B35" numberOfLines={1} color={colors.primary5}  style={[styles.mv20, styles.selfCenter]}>
+            <EText type="B35" numberOfLines={1} color="#222"  style={[styles.mv20, styles.selfCenter,{marginTop:70}]}>
             Login
             </EText>
+            
 
             <EInput
               placeHolder={strings.email}
@@ -231,7 +232,7 @@ const localStyles = StyleSheet.create({
     borderLeftWidth:moderateScale(0),
     borderRightWidth:moderateScale(0),
     borderRadius:0,
-    color:colors.primary5
+    color:'#222'
   },
   backgroundImage: {
     flex: 1,
@@ -240,6 +241,7 @@ const localStyles = StyleSheet.create({
   },
   inputBoxStyle: {
     ...styles.ph15,
+    color:'#222'
   },
   root:{
     flex:3,
