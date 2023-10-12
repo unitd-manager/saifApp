@@ -106,7 +106,7 @@ const RenderHeaderItem = React.memo(() => {
   return (
     <View>
       <HomeHeader />
-      <ImageBackground
+      {/* <ImageBackground
   source={require('/SaifApp/saifApp/android/app/src/main/res/drawable/splash_logo.png')} // Replace with the actual image path
   style={localStyles.backgroundImage}
 >
@@ -117,7 +117,7 @@ const RenderHeaderItem = React.memo(() => {
     </View>
     <Caledar />
   </View>
-</ImageBackground>
+</ImageBackground> */}
 
     </View>
   );

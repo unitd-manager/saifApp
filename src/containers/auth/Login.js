@@ -141,7 +141,7 @@ const Login = () => {
     <ESafeAreaView style={localStyles.root}>
         <KeyBoardAvoidWrapper contentContainerStyle={{flex:1}}>
         <ImageBackground
-          source={require('../../../android/app/src/main/res/drawable/splash_login.jpg')}
+          source={require('../../assets/images/splash_logo.png')}
           style={localStyles.backgroundImage}
 >
         <View style={localStyles.mainContainer}>
