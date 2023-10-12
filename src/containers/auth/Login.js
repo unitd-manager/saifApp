@@ -1,5 +1,5 @@
 // Library Imports
-import {StyleSheet, View, TouchableOpacity, Alert,ImageBackground} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Alert,ImageBackground,Image} from 'react-native';
 import React, {useEffect, useState, useContext} from 'react';
 import {useSelector} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -8,6 +8,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import strings from '../../i18n/strings';
 import {colors, styles} from '../../themes';
 import { getHeight, moderateScale} from '../../common/constants';
+import EHeader from '../../components/common/EHeader';
 import ESafeAreaView from '../../components/common/ESafeAreaView';
 import EInput from '../../components/common/EInput';
 import {validateEmail} from '../../utils/validators';
@@ -16,7 +17,6 @@ import EButton from '../../components/common/EButton';
 import api from '../../api/api';
 import AuthContext from "../../navigation/Type/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import EText from '../../components/common/EText';
 
 const Login = () => {
   const colors = useSelector(state => state.theme.theme);
@@ -26,7 +26,7 @@ const Login = () => {
     borderColor: colors.primary5,
   };
   const FocusedStyle = {
-    // backgroundColor: colors.white,
+    backgroundColor: colors.inputFocusColor,
     borderColor: colors.primary5,
   };
 
@@ -139,18 +139,22 @@ const Login = () => {
 
   return (
     <ESafeAreaView style={localStyles.root}>
+      {/* <EHeader isHideBack/> */}
         <KeyBoardAvoidWrapper contentContainerStyle={{flex:1}}>
         <ImageBackground
-          source={require('../../assets/images/splash_logo.png')}
+          source={require('../../assets/images/loginBG.jpeg')}
           style={localStyles.backgroundImage}
 >
         <View style={localStyles.mainContainer}>
 
-          <View style={[localStyles.loginBg]}>
+        <View style={[{flex:2}]}></View>
+
+          <View style={[localStyles.loginBg,{flex:3}]}>
          
-            <EText type="B35" numberOfLines={1} color={colors.primary5}  style={[styles.mv20, styles.selfCenter]}>
-            Login
-            </EText>
+              <Image
+          style={localStyles.banner}
+          source={require('../../assets/images/logo.jpeg')}
+        />
 
             <EInput
               placeHolder={strings.email}
@@ -192,7 +196,7 @@ const Login = () => {
             />
 
             <EButton
-              title={strings.signIn}
+              title={strings.Login}
               type={'S16'}
               color={isSubmitDisabled && colors.white}
               containerStyle={localStyles.signBtnContainer}
@@ -222,24 +226,27 @@ const localStyles = StyleSheet.create({
     ...styles.center,
     width: '100%',
     ...styles.mv20,
+    height: getHeight(65),
+    borderRadius:10,
   },
   inputContainerStyle: {
-    height: getHeight(60),
+    height: getHeight(65),
     ...styles.ph15,
-    borderBottomWidth:moderateScale(1),
-    borderTopWidth:moderateScale(0),
-    borderLeftWidth:moderateScale(0),
-    borderRightWidth:moderateScale(0),
-    borderRadius:0,
-    color:colors.primary5
+    borderBottomWidth:moderateScale(1.5),
+    borderTopWidth:moderateScale(1.5),
+    borderLeftWidth:moderateScale(1.5),
+    borderRightWidth:moderateScale(1.5),
+    borderRadius:10,
+    color:'#222'
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover', // You can adjust this to 'contain' or other values as needed
+    resizeMode: 'cover',
     justifyContent: 'center',
   },
   inputBoxStyle: {
     ...styles.ph15,
+    color:'#222'
   },
   root:{
     flex:3,
@@ -249,8 +256,15 @@ const localStyles = StyleSheet.create({
     backgroundColor:'white',
   },
   loginBg:{
-    ...styles.ph30,
-    borderTopRightRadius:100,
-    paddingTop:50
-  }
+    backgroundColor:"#fff",
+    ...styles.ph20,
+    borderTopRightRadius:30,
+    borderTopLeftRadius:30,
+    paddingTop:30
+  },
+  banner: {
+    width: '60%',
+    height: '30%',
+    alignSelf: 'flex-end',
+},
 });

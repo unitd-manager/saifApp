@@ -147,7 +147,7 @@ const ViewAttendace = () => {
                 borderColor: '#FF9A7F',
                 height: 350,
               }}
-              initialDate="2023-08-01"
+              initialDate="2023-10-01"
               markingType="period"
               markedDates={getMarked()}
             />
@@ -292,7 +292,7 @@ const ViewAttendace = () => {
     let marked = {};
     for (let i = 12; i <= 20; i++) {
       let day = i.toString().padStart(2, '0');
-      marked[`2023-8-${day}`] = {
+      marked[`2023-10-${day}`] = {
         startingDay: i == 13,
         endingDay: i == 19,
         color: '#163a71',

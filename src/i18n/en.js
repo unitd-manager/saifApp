@@ -115,7 +115,7 @@ export default {
   email: 'Email',
   password: 'Password',
   AlreadyHaveAccount: 'Already have an account?',
-  signIn: 'Sign in',
+  Login: 'Login',
   loginYourAccount: 'UTS Smartcon',
   forgotPassword: 'Forgot the password?',
   thisFieldIsMandatory: 'This field is mandatory',

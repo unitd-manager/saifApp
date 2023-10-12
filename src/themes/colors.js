@@ -15,7 +15,7 @@ const LightColor = {
   inactive: '#9E9E9E',
   backgroundColor1: '#FFFFFF',
   backgroundColor2: '#E5E5E5',
-  backgroundColor3:'#FF9A7F',
+  backgroundColor3:'#0d4c99',
   textColor2: '#616161',
   themeLight:'#FEE4D8',
 };
