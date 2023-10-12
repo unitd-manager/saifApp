@@ -29,29 +29,16 @@ const OnBoardingSlide = [
 const popularEventData = [
   {
     id: 1,
-    image: images.attendance,
-    title: ' Create Booking',
+    image: images.court1,
+    title: 'Tim Chow Court ',
     url: 'ViewAttendace'
   },
   {
     id: 2,
-    image: images.leave,
+    image: images.court2,
     title: 'Booked History',
     url: 'RequestLeave'
   },
-  // {
-  //   id: 3,
-  //   image: images.payroll,
-  //   title: 'Payroll',
-  //   url: 'ViewPayroll'
-  // },
-  // {
-  //   id: 4,
-  //   image: images.holiday,
-  //   title: 'Holidays',
-  //   url: 'ViewHolidays'
-  // },
-
 ];
 
 const holidayList = [

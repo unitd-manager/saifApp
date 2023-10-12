@@ -93,7 +93,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = "MouloodPro";
+			name = "SaifSportsClub";
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
@@ -189,8 +189,8 @@
 			);
 			dependencies = (
 			);
-			name = "MouloodPro";
-			productName = "MouloodPro";
+			name = "SaifSportsClub";
+			productName = "SaifSportsClub";
 			productReference = 13B07F961A680F5B00A75B9A /* MouloodPro.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -449,7 +449,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.MouloodPro";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.SSC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MouloodPro.app/MouloodPro";
 			};
@@ -473,7 +473,7 @@
 					"-lc++",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.MouloodPro";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.SSC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MouloodPro.app/MouloodPro";
 			};
@@ -488,7 +488,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "MouloodPro/Info.plist";
-             INFOPLIST_KEY_CFBundleDisplayName = "MouloodPro";
+             INFOPLIST_KEY_CFBundleDisplayName = "Saif Sports Club";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -499,8 +499,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.MouloodPro";
-				PRODUCT_NAME = "MouloodPro";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.SSC";
+				PRODUCT_NAME = "SaifSportsClub";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -515,7 +515,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = "MouloodPro/Info.plist";
-             INFOPLIST_KEY_CFBundleDisplayName = "MouloodPro";
+             INFOPLIST_KEY_CFBundleDisplayName = "Saif Sports Club";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -526,8 +526,8 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.MouloodPro";
-				PRODUCT_NAME = "MouloodPro";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.SSC";
+				PRODUCT_NAME = "SaifSportsClub";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -93,9 +93,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.MouloodPro"
+    namespace "com.SSC"
     defaultConfig {
-        applicationId "com.MouloodPro"
+        applicationId "com.SSC"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

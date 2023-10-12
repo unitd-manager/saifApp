@@ -1,60 +1,68 @@
 import {
-  ImageBackground,
+  Image,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 // Custom Imports
 import EText from '../common/EText';
-import {commonColor, styles} from '../../themes';
-import {deviceWidth, getHeight, moderateScale} from '../../common/constants';
+import { commonColor, styles } from '../../themes';
+import { deviceWidth, getHeight, moderateScale } from '../../common/constants';
 
-export default function SmallCardComponent({item, index}) {
+export default function SmallCardComponent({ item, index }) {
   const navigation = useNavigation();
   const colors = useSelector(state => state.theme.theme);
-  // const [isLiked, setIsLiked] = useState(true);
 
-  // const onPressLike = () => setIsLiked(!isLiked);
-  const onPressDetail = () => {
-    // Navigate to the corresponding screen based on the URL
-    if (item.url === 'ViewAttendace') {
-      navigation.navigate('ViewAttendace'); 
-    } else if (item.url === 'RequestLeave') {
-      navigation.navigate('RequestLeave');
-    } else if (item.url === 'ViewPayroll') {
-      navigation.navigate('ViewPayroll');
-    } else if (item.url === 'ViewHolidays') {
-      navigation.navigate('ViewHolidays');
-    }
-  };
+  // const onPressDetail = () => {
+  //   // Navigate to the corresponding screen based on the URL
+  //   if (item.url === 'ViewAttendace') {
+  //     navigation.navigate('ViewAttendace');
+  //   } else if (item.url === 'RequestLeave') {
+  //     navigation.navigate('RequestLeave');
+  //   } else if (item.url === 'ViewPayroll') {
+  //     navigation.navigate('ViewPayroll');
+  //   } else if (item.url === 'ViewHolidays') {
+  //     navigation.navigate('ViewHolidays');
+  //   }
+  // };
 
   return (
+    
     <TouchableOpacity
       style={[
         localStyles.root,
         index % 2 === 0 ? styles.mr5 : styles.ml5,
-        {backgroundColor: colors.white ? '#fafafa' : colors.white},
+        { backgroundColor: colors.white ? '#fafafa' : colors.white },
       ]}
-      onPress={onPressDetail} >
+      // onPress={onPressDetail} 
+      >
 
-      <ImageBackground
-        source={item?.image}
+      <Image
         style={localStyles.imageStyle}
-        imageStyle={{borderRadius: moderateScale(16)}}
-        >
-      </ImageBackground>
+        source={item?.image}
+      />
 
-      <EText
-        type={'S16'}
-        numberOfLines={1}
-        style={localStyles.textStyle}>
-        {item?.title}
-      </EText>
- 
+      <View style={localStyles.locationSubContainer}>
+        <EText
+          type={'S16'}
+          numberOfLines={1}
+          style={localStyles.textStyle}>
+          {item?.title}
+        </EText>
+
+        <EText
+          type={'S16'}
+          numberOfLines={1}
+          style={localStyles.price}>
+          {'₹ 30'}
+        </EText>
+      </View>
+
+
 
     </TouchableOpacity>
   );
@@ -62,29 +70,31 @@ export default function SmallCardComponent({item, index}) {
 
 const localStyles = StyleSheet.create({
   root: {
-    ...styles.p10,
+    ...styles.pb10,
+    ...styles.m10,
     ...styles.flex,
     ...styles.shadowStyle,
     ...styles.justifyCenter,
     width: (deviceWidth - moderateScale(120)) / 2,
     ...styles.mt15,
-    borderRadius: moderateScale(5),
+    borderRadius: moderateScale(10),
   },
   imageStyle: {
-    width:'90%',
+    width: '100%',
     height: getHeight(120),
-    alignSelf:'center',
-   resizeMode: 'cover',
+    alignSelf: 'center',
+    resizeMode: 'cover',
+    borderRadius: moderateScale(10),
   },
   textStyle: {
-    ...styles.mt10,
     ...styles.flex,
-    alignSelf:'center',
+    fontSize: 13,
   },
   locationSubContainer: {
+    ...styles.flex,
     ...styles.flexRow,
     ...styles.itemsCenter,
-    ...styles.flex,
+    ...styles.p10,
   },
   locationContainer: {
     ...styles.rowSpaceBetween,
@@ -100,5 +110,11 @@ const localStyles = StyleSheet.create({
     backgroundColor: commonColor.primary5,
     right: moderateScale(10),
     top: moderateScale(10),
+  },
+  price: {
+    backgroundColor: commonColor.primary5,
+    color: commonColor.white,
+    fontSize: 10,
+    ...styles.p5,
   },
 });

@@ -97,12 +97,13 @@ function HomeHeader({user}) {
     <View>
        <View style={localStyles.headerContainer}>            
         <View style={localStyles.textContainer}>
-          <EText type="m16" numberOfLines={1} color={colors.textColor}>
-            Hi Fatema
+        <EText type="B20" numberOfLines={1} color={colors.textColor}>
+           Welcome to saif sports club
           </EText>
-          <EText type="B20" numberOfLines={1} color={colors.textColor}>
-           Welcome Back {user && user.first_name} 
-          </EText>
+          {/* <EText type="m16" numberOfLines={1} color={colors.textColor}>
+            Syed
+          </EText> */}
+          
         </View>
 
         <TouchableOpacity
