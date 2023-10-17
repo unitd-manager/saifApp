@@ -16,7 +16,6 @@ import KeyBoardAvoidWrapper from '../../components/common/KeyBoardAvoidWrapper';
 import EButton from '../../components/common/EButton';
 import api from '../../api/api';
 import AuthContext from "../../navigation/Type/Auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native'
 import EText from '../../components/common/EText';
 import { StackNav } from '../../navigation/NavigationKeys';
@@ -106,7 +105,7 @@ const SignUp = () => {
 
 
     const Insert = () => {
-        // Ensure that the name, email, password, and phone are not empty
+        console.log(name,email,password,phone)
         if (!name || !email || !password || !phone) {
             Alert.alert('Please fill in all fields');
             return;
@@ -115,12 +114,12 @@ const SignUp = () => {
         const registerData = {
             first_name: name,
             email: email,
-            pass_word: password,
+            password: password,
             mobile: phone,
         };
     
         api
-            .post('/auth/register', registerData)
+            .post('/api/register', registerData)
             .then(response => {
                 if (response.status === 200) {
                     alert('Thank You for registering');
@@ -130,7 +129,9 @@ const SignUp = () => {
             })
             .catch(error => {
                 console.error('Error:', error);
-            });
+            }
+            
+            );
     };
     
     // Icons
@@ -208,33 +209,11 @@ const SignUp = () => {
         </TouchableOpacity>
     );
 
-    const onPressSignWithPassword = async () => {
-        api.post('/api/login', {
-            email: email,
-            password: password
-        }).then(async (res) => {
-            console.log(res.data.data)
-            if (res && res.data.msg === 'Success') {
-                await AsyncStorage.setItem('USER_TOKEN', 'loggedin')
-                await AsyncStorage.setItem('USER', JSON.stringify(res.data.data))
-                signIn('124')
-            } else {
-                Alert.alert('Please Enter Correct Email and Password')
-            }
-        }).catch(() => {
-            Alert.alert('Invalid Credentials')
-        })
-    };
-
-
     const onPressSignIn = () => {
-
         navigation.navigate(StackNav.Login);
     };
 
-
     const onPressPasswordEyeIcon = () => setIsPasswordVisible(!isPasswordVisible);
-
 
     return (
         <ESafeAreaView style={localStyles.root}>
