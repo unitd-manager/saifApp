@@ -7,6 +7,7 @@ import { Tournament } from '../../../assets/svgs';
 // Custom Imports
 import { styles, colors } from '../../../themes';
 import { popularEventData } from '../../../api/constant';
+import api from '../../../api/api'
 import HomeHeader from '../../../components/homeComponent/HomeHeader';
 import SmallCardComponent from '../../../components/homeComponent/SmallCardComponent';
 import EText from '../../../components/common/EText';
@@ -25,12 +26,25 @@ export default function HomeTab() {
     userData = JSON.parse(userData);
     setUserData(userData);
   };
-
+  
   const [DATA, setData] = React.useState([
-    { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23', time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
-    { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23', time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
-    { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23', time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
-    { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23', time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
+    // { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23', time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
+    // { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23', time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
+    // { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23', time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
+    // { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23', time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
+    api
+      .get('/booking/getBookingContactById')
+      .then((res) => {
+        res.data.data.forEach((element) => {
+          element.tag = String(element.tag).split(',');
+        });
+        setData(res.data.data);
+      })
+      .catch(() => {
+        console.log('Error fetching clients');
+      })
+  
+
   ])
 
   useEffect(() => {
