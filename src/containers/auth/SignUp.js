@@ -78,24 +78,24 @@ const SignUp = () => {
 
 
 // onChanged
-    const onChangedName = val => {
+    const onChangedName = val1 => {
         // const { msg } = validateEmail(val.trim());
-        setName(val.trim());
+        setName(val1.trim());
         // setEmailError(msg);
     };
-    const onChangedEmail = val => {
-        const { msg } = validateEmail(val.trim());
-        setEmail(val.trim());
+    const onChangedEmail = val2 => {
+        const { msg } = validateEmail(val2.trim());
+        setEmail(val2.trim());
         setEmailError(msg);
     };
-    const onChangedPhone = val => {
+    const onChangedPhone = val3 => {
         // const { msg } = validateEmail(val.trim());
-        setPhone(val.trim());
+        setPhone(val3.trim());
         // setEmailError(msg);
     };
-    const onChangedPassword = val => {
+    const onChangedPassword = val4 => {
         // const {msg} = validatePassword(val.trim());
-        setPassword(val.trim());
+        setPassword(val4.trim());
         // setPasswordError(msg);
     };
     const onChangedConfirmPassword = val => {
@@ -104,6 +104,35 @@ const SignUp = () => {
         // setPasswordError(msg);
     };
 
+
+    const Insert = () => {
+        // Ensure that the name, email, password, and phone are not empty
+        if (!name || !email || !password || !phone) {
+            Alert.alert('Please fill in all fields');
+            return;
+        }
+    
+        const registerData = {
+            first_name: name,
+            email: email,
+            pass_word: password,
+            mobile: phone,
+        };
+    
+        api
+            .post('/auth/register', registerData)
+            .then(response => {
+                if (response.status === 200) {
+                    alert('Thank You for registering');
+                } else {
+                    console.error('Error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    };
+    
     // Icons
     const EmailIcon = () => {
         return <Ionicons name="mail" size={moderateScale(20)} color={'black'} />;
@@ -199,6 +228,7 @@ const SignUp = () => {
 
 
     const onPressSignIn = () => {
+
         navigation.navigate(StackNav.Login);
     };
 
@@ -329,7 +359,7 @@ const SignUp = () => {
                                 color={isSubmitDisabled && colors.white}
                                 containerStyle={localStyles.signBtnContainer}
                                 // onPress={onPressSignWithPassword}
-                                onPress={() => navigation.navigate('Login')}
+                                onPress={() => Insert()}
                                 bgColor={isSubmitDisabled && colors.primary5}
                             />
 
