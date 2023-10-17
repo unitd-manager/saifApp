@@ -115,7 +115,7 @@ const Login = () => {
   );
 
   const onPressSignWithPassword = async () => {
-    api.post('/api/login', {
+    api.post('/api/loginApp', {
       email:email,
       password:password
     }).then(async(res) => { 
