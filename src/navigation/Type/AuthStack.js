@@ -13,6 +13,7 @@ export default function AuthStack() {
       <Stack.Navigator
         screenOptions={{headerShown: false}}
         initialRouteName={StackNav.Splash}>
+          <Stack.Screen name={StackNav.SignUp} component={StackRoute.SignUp} />
           <Stack.Screen name={StackNav.Login} component={StackRoute.Login} />
       </Stack.Navigator>
    

@@ -7,16 +7,12 @@ import Splash from '../containers/auth/Splash';
 import WelcomeScreen from '../containers/WelcomeScreen';
 import OnBoarding from '../containers/OnBoarding';
 import Login from '../containers/auth/Login';
+import SignUp from '../containers/auth/SignUp';
 import TabBar from './Type/TabBarNavigation';
 import Connect from '../containers/auth/Connect';
 import SelfieWithId from '../containers/auth/SelfieWithId';
 import HomeListCard from '../containers/tabbar/HomeListCard';
-import ViewAttendace from '../containers/tabbar/main/ViewAttendace';
-import ViewHolidays from '../containers/tabbar/main/ViewHolidays';
-import ViewLeaves from '../containers/tabbar/main/ViewLeaves';
-import ViewPayroll from '../containers/tabbar/main/ViewPayroll';
-import GeneratePayslip from '../containers/tabbar/main/GeneratePayslip';
-import RequestLeave from '../containers/tabbar/main/RequestLeave';
+import BookCourt from '../containers/tabbar/main/BookCourt';
 
 export const TabRoute = {
   // MainHome,
@@ -28,14 +24,10 @@ export const StackRoute = {
   WelcomeScreen,
   OnBoarding,
   Login,
+  SignUp,
   TabBar,
   Connect,
   SelfieWithId,
   HomeListCard,
-  ViewAttendace,
-  ViewHolidays,
-  ViewLeaves,
-  ViewPayroll,
-  GeneratePayslip,
-  RequestLeave
+  BookCourt,
 };

@@ -60,10 +60,11 @@ export default EInput = props => {
           localStyle.inputContainer,
           {
             borderColor: _errorText ? colors.alertColor : colors.bColor,
-            height: multiline ? getHeight(75) : getHeight(50),
+            height: multiline ? getHeight(60) : getHeight(50),
           },
           inputContainerStyle,
-        ]}>
+        ]}
+        >
         {insideLeftIcon ? (
           <View style={styles.pl10}>{insideLeftIcon()}</View>
         ) : null}
@@ -134,7 +135,7 @@ const localStyle = StyleSheet.create({
     borderWidth: moderateScale(1),
     borderRadius: moderateScale(6),
     ...styles.rowSpaceBetween,
-    ...styles.mt5,
+    // ...styles.mt5,
     width: '100%',
   },
   labelContainer: {

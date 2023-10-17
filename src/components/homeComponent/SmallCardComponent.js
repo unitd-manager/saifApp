@@ -17,18 +17,12 @@ export default function SmallCardComponent({ item, index }) {
   const navigation = useNavigation();
   const colors = useSelector(state => state.theme.theme);
 
-  // const onPressDetail = () => {
-  //   // Navigate to the corresponding screen based on the URL
-  //   if (item.url === 'ViewAttendace') {
-  //     navigation.navigate('ViewAttendace');
-  //   } else if (item.url === 'RequestLeave') {
-  //     navigation.navigate('RequestLeave');
-  //   } else if (item.url === 'ViewPayroll') {
-  //     navigation.navigate('ViewPayroll');
-  //   } else if (item.url === 'ViewHolidays') {
-  //     navigation.navigate('ViewHolidays');
-  //   }
-  // };
+  const onPressDetail = () => {
+    if (item.url === 'BookCourt') {
+      console.log('item before navigation:', item);
+      navigation.navigate('BookCourt', { item });
+    } 
+  };
 
   return (
     
@@ -38,7 +32,7 @@ export default function SmallCardComponent({ item, index }) {
         index % 2 === 0 ? styles.mr5 : styles.ml5,
         { backgroundColor: colors.white ? '#fafafa' : colors.white },
       ]}
-      // onPress={onPressDetail} 
+      onPress={onPressDetail} 
       >
 
       <Image

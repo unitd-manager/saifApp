@@ -30,14 +30,14 @@ const popularEventData = [
   {
     id: 1,
     image: images.court1,
-    title: 'Tim Chow Court ',
-    url: 'ViewAttendace'
+    title: 'Court 1',
+    url: 'BookCourt'
   },
   {
     id: 2,
     image: images.court2,
-    title: 'Booked History',
-    url: 'RequestLeave'
+    title: 'Court 2',
+    url: 'BookCourt'
   },
 ];
 

@@ -27,10 +27,10 @@ export default function HomeTab() {
 
 
   const [DATA, setData] = React.useState([
-    { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Tim Chow Court ', power: '10-10-23', color: '#30B69E', amount: "60 rs/-" },
-    { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Tim Chow Court ', power: '10-10-23', color: '#F8C666', amount: "60 rs/-" },
-    { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Tim Chow Court ', power: '10-10-23', color: '#678FCB', amount: "60 rs/-" },
-    { id: '5', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Tim Chow Court ', power: '10-10-23', color: '#D47DE2', amount: "60 rs/-" }
+    { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23',time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
+    { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23',time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
+    { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23',time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
+    { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23',time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
   ])
 
   useEffect(() => {
@@ -61,9 +61,15 @@ export default function HomeTab() {
         style={{flex:3}}
       />
 
-<EText type="B20" numberOfLines={1} color="#222" style={{ margin: 20 }}>
-  Booking History
-</EText>
+<View style={localStyles.history}>
+  <EText type="B20" numberOfLines={1} color="#222" style={{ margin: 20 }}>
+    Booking History
+  </EText>
+  <EText type="B14" numberOfLines={1} style={{ margin: 20,textDecorationLine: 'underline', }}>
+    View All
+  </EText>
+</View>
+
 
       <View style={[localStyles.loginBg, { flex: .7 }]}>
       
@@ -80,10 +86,14 @@ export default function HomeTab() {
                 />
                   <View>
                     <Text style={localStyles.heading}>{item.heading}</Text>
-                    <Text style={localStyles.power}>{item.power}</Text>
+                    <View style={{display:'flex',flexDirection:'row',}}>
+                      <Text style={localStyles.power}>{item.date}</Text>
+                      <Text style={localStyles.power}>{item.time}</Text>
+                    </View>
+                    
                   </View>
                 </View>
-                <Text style={localStyles.power}>{item.amount}</Text>
+                <Text style={[localStyles.power,{marginRight:0}]}>{item.amount}</Text>
               </View>
             )
           }}
@@ -157,7 +167,6 @@ const localStyles = StyleSheet.create({
   heading: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
   },
   circular: {
     width: 50,
@@ -170,8 +179,11 @@ const localStyles = StyleSheet.create({
     maxWidth: '80%',
   },
   power: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#fff',
+    marginRight:15
   },
-
+  history:{
+    display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems: 'center',
+  }
 });

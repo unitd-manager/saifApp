@@ -8,7 +8,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import strings from '../../i18n/strings';
 import {colors, styles} from '../../themes';
 import { getHeight, moderateScale} from '../../common/constants';
-import EHeader from '../../components/common/EHeader';
 import ESafeAreaView from '../../components/common/ESafeAreaView';
 import EInput from '../../components/common/EInput';
 import {validateEmail} from '../../utils/validators';
@@ -226,11 +225,11 @@ const localStyles = StyleSheet.create({
     ...styles.center,
     width: '100%',
     ...styles.mv20,
-    height: getHeight(65),
+    height: getHeight(60),
     borderRadius:10,
   },
   inputContainerStyle: {
-    height: getHeight(65),
+    height: getHeight(60),
     ...styles.ph15,
     borderBottomWidth:moderateScale(1.5),
     borderTopWidth:moderateScale(1.5),
