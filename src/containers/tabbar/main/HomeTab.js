@@ -14,7 +14,7 @@ import EText from '../../../components/common/EText';
 import { moderateScale } from '../../../common/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function HomeTab() {
+export default function HomeTab({route}) {
 
   const colors = useSelector(state => state.theme.theme);
   // const userData = useSelector(state => state.user.userData);
@@ -26,26 +26,31 @@ export default function HomeTab() {
     userData = JSON.parse(userData);
     setUserData(userData);
   };
-  
-  const [DATA, setData] = React.useState([
+  const { contactId } = route.params?.contactId || {};
+  const [DATA, setData] = useState([])
     // { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23', time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
     // { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23', time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
     // { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23', time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
-    // { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23', time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
+   
+   // { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23', time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
+   const fetchBookingContact = (id) => {
     api
-      .get('/booking/getBookingContactById')
+      .get('/booking/getBookingContactById', { contact_id: id })
       .then((res) => {
+        console.log('API Response:', res.data);
         res.data.data.forEach((element) => {
           element.tag = String(element.tag).split(',');
         });
+        console.log('Transformed Data:', res.data.data);
         setData(res.data.data);
       })
-      .catch(() => {
-        console.log('Error fetching clients');
-      })
-  
+      .catch((error) => {
+        console.log('Error fetching data:', error);
+      });
+  };
 
-  ])
+  
+  
 
   useEffect(() => {
     setExtraData(!extraData);
@@ -53,9 +58,15 @@ export default function HomeTab() {
 
   useEffect(() => {
     getUser();
+
   }, []);
 
-
+  useEffect(() => {
+    if (contactId) {
+      fetchBookingContact(contactId);
+    }
+  }, [contactId]);
+  
   const renderCategoryItem = ({ item, index }) => {
     return <SmallCardComponent item={item} key={index} user={user} />;
   };
@@ -88,31 +99,28 @@ export default function HomeTab() {
 
       <View style={[localStyles.loginBg, { flex: .7 }]}>
 
-        <FlatList
+      <FlatList
           data={DATA}
           renderItem={({ item, index }) => {
             return (
-              <View style={localStyles.item}>
-
-                <View style={localStyles.itemLeft}>
+              <View style={styles.item}>
+                <View style={styles.itemLeft}>
                   <Image
-                    style={[localStyles.circular, { backgroundColor: item.color }]}
-                    source={item.thumbimg}
+                    style={[styles.circular, { backgroundColor: item.color }]}
+                    source={item.thumbimg} // Update this to match your image property
                   />
                   <View>
-                    <Text style={localStyles.heading}>{item.heading}</Text>
-                    <View style={{ display: 'flex', flexDirection: 'row', }}>
-                      <Text style={localStyles.power}>{item.date}</Text>
-                      <Text style={localStyles.power}>{item.time}</Text>
+                    <Text style={styles.heading}>{item.hall}</Text> {/* Update this to match your data */}
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                      <Text style={styles.power}>{item.booking_date}</Text> {/* Update this to match your data */}
+                      <Text style={styles.power}>{item.assign_time}</Text> {/* Update this to match your data */}
                     </View>
-
                   </View>
                 </View>
-                <Text style={[localStyles.power, { marginRight: 0 }]}>{item.amount}</Text>
               </View>
-            )
+            );
           }}
-          keyExtractor={item => item.id}
+          keyExtractor={(item) => item.contact_id.toString()}
         />
       </View>
 
