@@ -1,8 +1,8 @@
-import { StyleSheet, View, Text, FlatList,Image } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { FlashList } from '@shopify/flash-list';
-import {Tournament} from '../../../assets/svgs';
+import { Tournament } from '../../../assets/svgs';
 
 // Custom Imports
 import { styles, colors } from '../../../themes';
@@ -11,43 +11,44 @@ import HomeHeader from '../../../components/homeComponent/HomeHeader';
 import SmallCardComponent from '../../../components/homeComponent/SmallCardComponent';
 import EText from '../../../components/common/EText';
 import { moderateScale } from '../../../common/constants';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeTab() {
 
   const colors = useSelector(state => state.theme.theme);
   // const userData = useSelector(state => state.user.userData);
   const [extraData, setExtraData] = useState(true);
-  // const [user, setUserData] = useState();
+  const [user, setUserData] = useState();
 
-  //   const getUser = async () => {
-  //   let userData = await AsyncStorage.getItem('USER');
-  //   userData = JSON.parse(userData);
-  //   setUserData(userData);
-  // };
-
+  const getUser = async () => {
+    let userData = await AsyncStorage.getItem('USER');
+    userData = JSON.parse(userData);
+    setUserData(userData);
+  };
 
   const [DATA, setData] = React.useState([
-    { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23',time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
-    { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23',time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
-    { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23',time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
-    { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23',time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
+    { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23', time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
+    { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23', time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
+    { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23', time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
+    { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23', time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
   ])
 
   useEffect(() => {
     setExtraData(!extraData);
   }, [colors]);
 
-  //   useEffect(() => {
-  //   getUser();
-  // }, []);
+  useEffect(() => {
+    getUser();
+  }, []);
 
 
   const renderCategoryItem = ({ item, index }) => {
-    return <SmallCardComponent item={item} key={index} />;
+    return <SmallCardComponent item={item} key={index} user={user} />;
   };
 
   return (
-    <View style={[styles.flexGrow1, { backgroundColor: '#f5f5f5', flexDirection: 'column'  }]}>
+    <View style={[styles.flexGrow1, { backgroundColor: '#f5f5f5', flexDirection: 'column' }]}>
+      <HomeHeader user={user} />
       <FlashList
         data={popularEventData}
         extraData={extraData}
@@ -58,21 +59,21 @@ export default function HomeTab() {
         ListHeaderComponent={<RenderHeaderItem />}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={localStyles.contentContainerStyle}
-        style={{flex:3}}
+        style={{ flex: 3 }}
       />
 
-<View style={localStyles.history}>
-  <EText type="B20" numberOfLines={1} color="#222" style={{ margin: 20 }}>
-    Booking History
-  </EText>
-  <EText type="B14" numberOfLines={1} style={{ margin: 20,textDecorationLine: 'underline', }}>
-    View All
-  </EText>
-</View>
+      <View style={localStyles.history}>
+        <EText type="B20" numberOfLines={1} color="#222" style={{ margin: 20 }}>
+          Booking History
+        </EText>
+        <EText type="B14" numberOfLines={1} style={{ margin: 20, textDecorationLine: 'underline', }}>
+          View All
+        </EText>
+      </View>
 
 
       <View style={[localStyles.loginBg, { flex: .7 }]}>
-      
+
         <FlatList
           data={DATA}
           renderItem={({ item, index }) => {
@@ -80,20 +81,20 @@ export default function HomeTab() {
               <View style={localStyles.item}>
 
                 <View style={localStyles.itemLeft}>
-                <Image
+                  <Image
                     style={[localStyles.circular, { backgroundColor: item.color }]}
                     source={item.thumbimg}
-                />
+                  />
                   <View>
                     <Text style={localStyles.heading}>{item.heading}</Text>
-                    <View style={{display:'flex',flexDirection:'row',}}>
+                    <View style={{ display: 'flex', flexDirection: 'row', }}>
                       <Text style={localStyles.power}>{item.date}</Text>
                       <Text style={localStyles.power}>{item.time}</Text>
                     </View>
-                    
+
                   </View>
                 </View>
-                <Text style={[localStyles.power,{marginRight:0}]}>{item.amount}</Text>
+                <Text style={[localStyles.power, { marginRight: 0 }]}>{item.amount}</Text>
               </View>
             )
           }}
@@ -109,15 +110,14 @@ export default function HomeTab() {
 const RenderHeaderItem = React.memo(() => {
   return (
     <View>
-      <HomeHeader />
       <View style={localStyles.card}>
         <View style={localStyles.left}>
           <EText type="m16" numberOfLines={1} color={'#fff'}> Tournament </EText>
-          <Text style={{color:'#fff'}}>Participate in a 2-hour tournament featuring intense rallying and competitive points.</Text>
+          <Text style={{ color: '#fff' }}>Participate in a 2-hour tournament featuring intense rallying and competitive points.</Text>
         </View>
         <Tournament width={moderateScale(70)} height={moderateScale(70)} />
       </View>
-      <EText type="B20" color="#222" style={{marginTop:20}}>
+      <EText type="B20" color="#222" style={{ marginTop: 20 }}>
         Our Court
       </EText>
     </View>
@@ -130,7 +130,7 @@ const localStyles = StyleSheet.create({
     ...styles.pb20,
   },
   card: {
-    backgroundColor:'#13458cbd',
+    backgroundColor: '#13458cbd',
     display: 'flex',
     justifyContent: 'space-between',
     flexDirection: 'row',
@@ -181,9 +181,9 @@ const localStyles = StyleSheet.create({
   power: {
     fontSize: 12,
     color: '#fff',
-    marginRight:15
+    marginRight: 15
   },
-  history:{
-    display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems: 'center',
+  history: {
+    display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
   }
 });

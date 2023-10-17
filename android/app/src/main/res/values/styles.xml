@@ -8,4 +8,9 @@
      <style name="SplashTheme" parent="AppTheme">
     <item name="android:windowBackground">@drawable/splash_screen</item>
   </style>
+
+  <!-- <style name="DatePicker1" parent="Theme.AppCompat.Light.Dialog">
+    <item name="colorAccent">@color/colorPrimary</item>
+  </style> -->
+
 </resources>

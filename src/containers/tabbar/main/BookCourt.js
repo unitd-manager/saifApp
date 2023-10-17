@@ -13,21 +13,42 @@ import api from '../../../api/api';
 import TimePicker from './TimePicker';
 
 const BookCourt = ({ route }) => {
+  const { user } = route.params;
+console.log(user)
   const [selected, setSelected] = React.useState('');
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
-  const [date, setDate] = useState(new Date())
+  const [selectedTime, setSelectedTime] = useState(null);
   const [layout, setLayOut] = React.useState('daily');
   const colors = useSelector(state => state.theme.theme);
   const item = route.params.item;
 
+  const selectedTabStyle = {
+    borderBottomWidth: 2, 
+    borderColor: '#fff',
+    position:'relative',
+    bottom:0
+  };
+  
+  const unselectedTabStyle = {
+    color: '#fff',
+    fontWeight: '600',
+  };
+
   const Booking = (selectedDates, hall) => {
+
+    if (!selectedDates || !selectedTime) {
+      alert('Please select a date and time before booking.');
+      return;
+    }
+
     if (Array.isArray(selectedDates) && selectedDates.length > 1) {
       selectedDates.forEach(date => {
         const bookingData = {
-          assign_time: '',
+          assign_time: selectedTime,
           booking_date: date,
           hall: hall,
+          employee_id:staff_id
         };
 
         api
@@ -37,6 +58,7 @@ const BookCourt = ({ route }) => {
               alert('Thank You for booking court');
               setSelectedStartDate('')
               setSelectedEndDate('')
+              setSelectedTime('')
             } else {
               console.error('Error in booking for date:', date);
             }
@@ -46,19 +68,21 @@ const BookCourt = ({ route }) => {
           });
       });
     } else if (selectedDates) {
+
       const bookingData = {
-        assign_time: '',
+        assign_time: selectedTime,
         booking_date: selectedDates,
         hall: hall,
+        employee_id:user.staff_id
       };
 
       api
         .post('/booking/insertBooking', bookingData)
         .then(response => {
-          console.log("New response", response);
           if (response.status === 200) {
             alert('Thank You for booking court');
             setSelected('');
+            setSelectedTime('')
           } else {
             alert('Error');
           }
@@ -113,11 +137,15 @@ const BookCourt = ({ route }) => {
                 },
               }}
             />
-            
-              <TimePicker />
-             {selected && (
-            <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selected}</Text>
-          )}
+
+            <TimePicker setSelectedTime={setSelectedTime} />
+
+            {selected && (
+              <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selected}</Text>
+            )}
+            {selectedTime && (
+              <Text style={Attendancestyles.selectedDateText}>Selected Time: {selectedTime}</Text>
+            )}
           </View>
 
         </>
@@ -132,18 +160,35 @@ const BookCourt = ({ route }) => {
               borderColor: colors.backgroundColor,
               height: 340,
             }}
+            theme={{
+              selectedDayBackgroundColor: colors.backgroundColor,
+              todayTextColor: colors.backgroundColor,
+              arrowColor: colors.backgroundColor,
+              'stylesheet.calendar.header': {
+                dayTextAtIndex0: {
+                  color: 'red',
+                },
+                dayTextAtIndex6: {
+                  color: 'green',
+                },
+              },
+            }}
             initialDate={getCurrentDate()}
             markingType="period"
-            //   markedDates={getMarked()}
             onDayPress={(day) => handleDateSelect(day.dateString)}
             markedDates={getMarked()}
           />
+          <TimePicker setSelectedTime={setSelectedTime} />
+
           {selectedStartDate && (
             <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selectedStartDate}</Text>
           )}
           {selectedEndDate && (
             <Text style={Attendancestyles.selectedDateText}>Selected End Date: {selectedEndDate}</Text>
           )}
+           {selectedTime && (
+              <Text style={Attendancestyles.selectedDateText}>Selected Time: {selectedTime}</Text>
+            )}
         </>
       );
     }
@@ -206,7 +251,7 @@ const BookCourt = ({ route }) => {
       <View
         style={{
           flexDirection: 'row',
-          backgroundColor: 'grey',
+          backgroundColor: '#e20e0ebd',
           justifyContent: 'space-around',
           padding: 10,
         }}>
@@ -214,14 +259,16 @@ const BookCourt = ({ route }) => {
           onPress={() => {
             setLayOut('daily');
           }}
-          style={Attendancestyles.head}>
+          style={[Attendancestyles.head,layout === 'daily' ? selectedTabStyle : unselectedTabStyle]}
+          >
           <Text style={{ color: '#fff', fontWeight: '600' }}>Daily</Text>
         </TouchableRipple>
         <TouchableRipple
           onPress={() => {
             setLayOut('Weekly');
           }}
-          style={Attendancestyles.head}>
+          style={[Attendancestyles.head,layout === 'Weekly' ? selectedTabStyle : unselectedTabStyle]}
+          >
           <Text style={{ color: '#fff', fontWeight: '600' }}>Weekly</Text>
         </TouchableRipple>
       </View>

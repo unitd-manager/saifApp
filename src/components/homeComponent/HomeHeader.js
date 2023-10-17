@@ -10,9 +10,6 @@ import EText from '../common/EText';
 import {moderateScale} from '../../common/constants';
 import LogOut from '../models/LogOut';
 import ProfilePicture from '../models/ProfilePicture';
-import images from '../../assets/images';
-import {EditDark, EditLight} from '../../assets/svgs';
-
 
 function HomeHeader({user}) {
 
@@ -98,11 +95,11 @@ function HomeHeader({user}) {
        <View style={localStyles.headerContainer}>            
         <View style={localStyles.textContainer}>
         <EText type="B20" numberOfLines={1} color={colors.textColor}>
-           Welcome to saif sports club
+           Welcome to saif sports club 
           </EText>
-          {/* <EText type="m16" numberOfLines={1} color={colors.textColor}>
-            Syed
-          </EText> */}
+          <EText type="m16" numberOfLines={1} color={colors.textColor}>
+          {user && user.first_name}
+          </EText>
           
         </View>
 

@@ -13,14 +13,14 @@ import EText from '../common/EText';
 import { commonColor, styles } from '../../themes';
 import { deviceWidth, getHeight, moderateScale } from '../../common/constants';
 
-export default function SmallCardComponent({ item, index }) {
+export default function SmallCardComponent({ item, index,user }) {
+
   const navigation = useNavigation();
   const colors = useSelector(state => state.theme.theme);
 
   const onPressDetail = () => {
     if (item.url === 'BookCourt') {
-      console.log('item before navigation:', item);
-      navigation.navigate('BookCourt', { item });
+      navigation.navigate('BookCourt', { item,user});
     } 
   };
 
