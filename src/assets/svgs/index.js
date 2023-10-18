@@ -26,6 +26,8 @@ import CheckIn from '../../assets/svgs/checkIn.svg';
 import Download from '../../assets/svgs/download.svg';
 import Downloads from '../../assets/svgs/downloads.svg';
 import Tournament from '../../assets/svgs/tournament.svg';
+import modalIconDark from '../../assets/svgs/modalIconDark.svg';
+import modalIconLight from '../../assets/svgs/modalIconLight.svg';
 export {
   AppLogo,
   AppFavicon,
@@ -49,5 +51,9 @@ export {
   CardClock,
   CheckIn,
   Download,Downloads,
-  Tournament
+  Tournament,
+  modalIconDark,
+  modalIconLight
 };
+
+

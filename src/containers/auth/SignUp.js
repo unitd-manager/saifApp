@@ -123,6 +123,11 @@ const SignUp = () => {
             .then(response => {
                 if (response.status === 200) {
                     alert('Thank You for registering');
+
+                    setTimeout(() => {
+                        SendEmail();
+                      }, 500);
+                
                 } else {
                     console.error('Error');
                 }
@@ -132,8 +137,27 @@ const SignUp = () => {
             }
             
             );
+           
     };
     
+    const SendEmail =()=>{
+        alert("Send Email")
+        console.log("email", email)
+        const to = email;
+        const subject = "Saif Registration";
+          api
+        .post('/commonApi/sendUseremail', {to,subject})
+        .then(response => {
+            if (response.status === 200) {
+                alert('Email sent successfully');
+                setTimeout(() => {
+                   navigation.navigate(StackNav.Sucess)
+                  }, 500);
+            } else {
+                console.error('Error');
+            }
+        })
+    } 
     // Icons
     const EmailIcon = () => {
         return <Ionicons name="mail" size={moderateScale(20)} color={'black'} />;
@@ -338,7 +362,10 @@ const SignUp = () => {
                                 color={isSubmitDisabled && colors.white}
                                 containerStyle={localStyles.signBtnContainer}
                                 // onPress={onPressSignWithPassword}
-                                onPress={() => Insert()}
+                                onPress={(event) =>{ Insert(event) 
+                                        //   SendEmail(event)
+                                        }
+                                        }
                                 bgColor={isSubmitDisabled && colors.primary5}
                             />
 

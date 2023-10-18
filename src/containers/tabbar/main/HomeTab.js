@@ -31,7 +31,6 @@ export default function HomeTab({route}) {
     // { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23', time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
     // { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23', time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
     // { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23', time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
-   
    // { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23', time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
    const fetchBookingContact = (id) => {
     api
@@ -48,9 +47,6 @@ export default function HomeTab({route}) {
         console.log('Error fetching data:', error);
       });
   };
-
-  
-  
 
   useEffect(() => {
     setExtraData(!extraData);
@@ -107,13 +103,13 @@ export default function HomeTab({route}) {
                 <View style={styles.itemLeft}>
                   <Image
                     style={[styles.circular, { backgroundColor: item.color }]}
-                    source={item.thumbimg} // Update this to match your image property
+                    source={item.thumbimg}
                   />
                   <View>
-                    <Text style={styles.heading}>{item.hall}</Text> {/* Update this to match your data */}
+                    <Text style={styles.heading}>{item.hall}</Text>
                     <View style={{ display: 'flex', flexDirection: 'row' }}>
-                      <Text style={styles.power}>{item.booking_date}</Text> {/* Update this to match your data */}
-                      <Text style={styles.power}>{item.assign_time}</Text> {/* Update this to match your data */}
+                      <Text style={styles.power}>{item.booking_date}</Text>
+                      <Text style={styles.power}>{item.assign_time}</Text>
                     </View>
                   </View>
                 </View>
