@@ -151,7 +151,7 @@ const SignUp = () => {
             if (response.status === 200) {
                 alert('Email sent successfully');
                 setTimeout(() => {
-                   navigation.navigate(StackNav.Sucess)
+                   navigation.navigate(StackNav.Login)
                   }, 500);
             } else {
                 console.error('Error');
