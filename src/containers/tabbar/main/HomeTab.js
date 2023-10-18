@@ -5,7 +5,7 @@ import { FlashList } from '@shopify/flash-list';
 import { Tournament } from '../../../assets/svgs';
 
 // Custom Imports
-import { styles, colors } from '../../../themes';
+import { styles } from '../../../themes';
 import { popularEventData } from '../../../api/constant';
 import api from '../../../api/api'
 import HomeHeader from '../../../components/homeComponent/HomeHeader';
@@ -14,10 +14,9 @@ import EText from '../../../components/common/EText';
 import { moderateScale } from '../../../common/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function HomeTab({route}) {
+export default function HomeTab() {
 
   const colors = useSelector(state => state.theme.theme);
-  // const userData = useSelector(state => state.user.userData);
   const [extraData, setExtraData] = useState(true);
   const [user, setUserData] = useState();
 
@@ -26,22 +25,24 @@ export default function HomeTab({route}) {
     userData = JSON.parse(userData);
     setUserData(userData);
   };
-  const { contactId } = route.params?.contactId || {};
+const contactId = user ? user.contact_id : null;
+
   const [DATA, setData] = useState([])
-    // { id: '1', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '10-10-23', time: '10AM - 12PM', color: '#30B69E', amount: "60 rs/-" },
-    // { id: '2', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '11-10-23', time: '10AM - 12PM', color: '#F8C666', amount: "60 rs/-" },
-    // { id: '3', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '12-10-23', time: '10AM - 12PM', color: '#678FCB', amount: "60 rs/-" },
-   // { id: '4', thumbimg: require('../../../assets/images/tumb.jpg'), heading: 'Court 1', date: '13-10-23', time: '10AM - 12PM', color: '#D47DE2', amount: "60 rs/-" }
-   const fetchBookingContact = (id) => {
+
+  
+  const fetchBookingContact = (contactId) => {
     api
-      .get('/booking/getBookingContactById', { contact_id: id })
+      .get('/booking/getBookingData')
       .then((res) => {
         console.log('API Response:', res.data);
-        res.data.data.forEach((element) => {
+        const filteredData = res.data.data.filter((element) => element.contact_id === contactId);
+  
+        filteredData.forEach((element) => {
           element.tag = String(element.tag).split(',');
         });
-        console.log('Transformed Data:', res.data.data);
-        setData(res.data.data);
+  
+        console.log('Transformed Data:', filteredData);
+        setData(filteredData);
       })
       .catch((error) => {
         console.log('Error fetching data:', error);
@@ -54,15 +55,10 @@ export default function HomeTab({route}) {
 
   useEffect(() => {
     getUser();
-
-  }, []);
-
-  useEffect(() => {
-    if (contactId) {
-      fetchBookingContact(contactId);
-    }
+    fetchBookingContact(contactId);
   }, [contactId]);
-  
+
+
   const renderCategoryItem = ({ item, index }) => {
     return <SmallCardComponent item={item} key={index} user={user} />;
   };
@@ -96,28 +92,34 @@ export default function HomeTab({route}) {
       <View style={[localStyles.loginBg, { flex: .7 }]}>
 
       <FlatList
-          data={DATA}
-          renderItem={({ item, index }) => {
-            return (
-              <View style={styles.item}>
-                <View style={styles.itemLeft}>
-                  <Image
-                    style={[styles.circular, { backgroundColor: item.color }]}
-                    source={item.thumbimg}
-                  />
-                  <View>
-                    <Text style={styles.heading}>{item.hall}</Text>
-                    <View style={{ display: 'flex', flexDirection: 'row' }}>
-                      <Text style={styles.power}>{item.booking_date}</Text>
-                      <Text style={styles.power}>{item.assign_time}</Text>
-                    </View>
-                  </View>
-                </View>
-              </View>
-            );
-          }}
-          keyExtractor={(item) => item.contact_id.toString()}
-        />
+  data={DATA}
+  renderItem={({ item, index }) => {
+    const imageSource = item.hall === 'court 1'
+      ? require('../../../assets/images/tumb.jpg')
+      : item.hall === 'court 2'
+      ? require('../../../assets/images/court2.webp')
+      : require('../../../assets/images/tumb.jpg');
+
+    return (
+      <View style={localStyles.item}>
+        <View style={localStyles.itemLeft}>
+          <Image
+            style={[localStyles.circular, { backgroundColor: item.color }]}
+            source={imageSource}
+          />
+          <View>
+            <Text style={localStyles.heading}>{item.hall}</Text>
+            <View style={{ display: 'flex', flexDirection: 'row' }}>
+              <Text style={localStyles.power}>{item.booking_date}</Text>
+              <Text style={localStyles.power}>{item.assign_time}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }}
+  keyExtractor={(item) => item.contact_id.toString()}
+/>
       </View>
 
     </View>
