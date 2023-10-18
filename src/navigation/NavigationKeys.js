@@ -17,4 +17,5 @@ export const StackNav = {
   Search: 'Search',
   MainHome: 'HomeTab',
   BookCourt: 'BookCourt',
+  Sucess: 'Sucess',
 };
