@@ -14,7 +14,7 @@ import TimePicker from './TimePicker';
 
 const BookCourt = ({ navigation,route }) => {
   const { user } = route.params;
-console.log(user)
+
   const [selected, setSelected] = React.useState('');
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
@@ -55,7 +55,6 @@ console.log(user)
           .post('/booking/insertBooking', bookingData)
           .then(response => {
             if (response.status === 200) {
-              alert('Thank You for booking court');
               setSelectedStartDate('')
               setSelectedEndDate('')
               setSelectedTime('')
@@ -68,6 +67,8 @@ console.log(user)
             console.error('Error in booking for date:', date, error);
           });
       });
+
+      alert('Thank You for booking court');
     } else if (selectedDates) {
 
       const bookingData = {

@@ -1,23 +1,28 @@
 // Library Imports
-import {StyleSheet, View, TouchableOpacity, Alert,ImageBackground,Image} from 'react-native';
-import React, {useEffect, useState, useContext} from 'react';
-import {useSelector} from 'react-redux';
+import { StyleSheet, View, TouchableOpacity, Alert, ImageBackground, Image } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { useSelector } from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native'
 
 // Local Imports
 import strings from '../../i18n/strings';
-import {colors, styles} from '../../themes';
-import { getHeight, moderateScale} from '../../common/constants';
+import { colors, styles } from '../../themes';
+import { getHeight, moderateScale } from '../../common/constants';
 import ESafeAreaView from '../../components/common/ESafeAreaView';
 import EInput from '../../components/common/EInput';
-import {validateEmail} from '../../utils/validators';
+import { validateEmail } from '../../utils/validators';
 import KeyBoardAvoidWrapper from '../../components/common/KeyBoardAvoidWrapper';
 import EButton from '../../components/common/EButton';
 import api from '../../api/api';
 import AuthContext from "../../navigation/Type/Auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import EText from '../../components/common/EText';
+import { StackNav } from '../../navigation/NavigationKeys';
 
 const Login = () => {
+  const navigation = useNavigation()
+
   const colors = useSelector(state => state.theme.theme);
 
   const BlurredStyle = {
@@ -63,7 +68,7 @@ const Login = () => {
   }, [email, password, emailError, passwordError]);
 
   const onChangedEmail = val => {
-    const {msg} = validateEmail(val.trim());
+    const { msg } = validateEmail(val.trim());
     setEmail(val.trim());
     setEmailError(msg);
   };
@@ -116,18 +121,18 @@ const Login = () => {
 
   const onPressSignWithPassword = async () => {
     api.post('/api/loginApp', {
-      email:email,
-      password:password
-    }).then(async(res) => { 
+      email: email,
+      password: password
+    }).then(async (res) => {
       console.log(res.data.data)
       if (res && res.data.msg === 'Success') {
-        await AsyncStorage.setItem('USER_TOKEN','loggedin')
-        await AsyncStorage.setItem('USER',JSON.stringify(res.data.data))
-        signIn('124')  
+        await AsyncStorage.setItem('USER_TOKEN', 'loggedin')
+        await AsyncStorage.setItem('USER', JSON.stringify(res.data.data))
+        signIn('124')
       } else {
         Alert.alert('Please Enter Correct Email and Password')
       }
-    }).catch(()=>{
+    }).catch(() => {
       Alert.alert('Invalid Credentials')
     })
   };
@@ -135,81 +140,98 @@ const Login = () => {
 
   const onPressPasswordEyeIcon = () => setIsPasswordVisible(!isPasswordVisible);
 
+  const onPressSignIn = () => {
+    navigation.navigate(StackNav.SignUp);
+  };
 
   return (
     <ESafeAreaView style={localStyles.root}>
       {/* <EHeader isHideBack/> */}
-        <KeyBoardAvoidWrapper contentContainerStyle={{flex:1}}>
+      <KeyBoardAvoidWrapper contentContainerStyle={{ flex: 1 }}>
         <ImageBackground
           source={require('../../assets/images/loginBG.jpeg')}
           style={localStyles.backgroundImage}
->
-        <View style={localStyles.mainContainer}>
+        >
+          <View style={localStyles.mainContainer}>
 
-        <View style={[{flex:2}]}></View>
+            <View style={[{ flex: 2 }]}></View>
 
-          <View style={[localStyles.loginBg,{flex:3}]}>
-         
+            <View style={[localStyles.loginBg, { flex: 3 }]}>
+
               <Image
-          style={localStyles.banner}
-          source={require('../../assets/images/logo.jpeg')}
-        />
+                style={localStyles.banner}
+                source={require('../../assets/images/logo.jpeg')}
+              />
 
-            <EInput
-              placeHolder={strings.email}
-              placeholderTextColor={colors.primary5}
-              keyBoardType={'email-address'}
-              _value={email}
-              _errorText={emailError}
-              errorStyle={colors.primary5}
-              autoCapitalize={'none'}
-              insideLeftIcon={() => <EmailIcon />}
-              toGetTextFieldValue={onChangedEmail}
-              inputContainerStyle={[
-                localStyles.inputContainerStyle,
-                emailInputStyle,
-              ]}
-              inputBoxStyle={[localStyles.inputBoxStyle]}
-              _onFocus={onFocusEmail}
-              onBlur={onBlurEmail}
-            />
+              <EInput
+                placeHolder={strings.email}
+                placeholderTextColor={colors.primary5}
+                keyBoardType={'email-address'}
+                _value={email}
+                _errorText={emailError}
+                errorStyle={colors.primary5}
+                autoCapitalize={'none'}
+                insideLeftIcon={() => <EmailIcon />}
+                toGetTextFieldValue={onChangedEmail}
+                inputContainerStyle={[
+                  localStyles.inputContainerStyle,
+                  emailInputStyle,
+                ]}
+                inputBoxStyle={[localStyles.inputBoxStyle]}
+                _onFocus={onFocusEmail}
+                onBlur={onBlurEmail}
+              />
 
-            <EInput
-              placeHolder={strings.password}
-              placeholderTextColor={colors.primary5}
-              keyBoardType={'default'}
-              _value={password}
-              _errorText={passwordError}
-              autoCapitalize={'none'}
-              insideLeftIcon={() => <PasswordIcon />}
-              toGetTextFieldValue={onChangedPassword}
-              inputContainerStyle={[
-                localStyles.inputContainerStyle,
-                passwordInputStyle,
-              ]}
-              _isSecure={isPasswordVisible}
-              inputBoxStyle={[localStyles.inputBoxStyle]}
-              _onFocus={onFocusPassword}
-              onBlur={onBlurPassword}
-              rightAccessory={() => <RightPasswordEyeIcon />}
-            />
+              <EInput
+                placeHolder={strings.password}
+                placeholderTextColor={colors.primary5}
+                keyBoardType={'default'}
+                _value={password}
+                _errorText={passwordError}
+                autoCapitalize={'none'}
+                insideLeftIcon={() => <PasswordIcon />}
+                toGetTextFieldValue={onChangedPassword}
+                inputContainerStyle={[
+                  localStyles.inputContainerStyle,
+                  passwordInputStyle,
+                ]}
+                _isSecure={isPasswordVisible}
+                inputBoxStyle={[localStyles.inputBoxStyle]}
+                _onFocus={onFocusPassword}
+                onBlur={onBlurPassword}
+                rightAccessory={() => <RightPasswordEyeIcon />}
+              />
 
-            <EButton
-              title={strings.Login}
-              type={'S16'}
-              color={isSubmitDisabled && colors.white}
-              containerStyle={localStyles.signBtnContainer}
-              onPress={onPressSignWithPassword}
-              bgColor={isSubmitDisabled && colors.primary5}
-            />
+              <EButton
+                title={strings.Login}
+                type={'S16'}
+                color={isSubmitDisabled && colors.white}
+                containerStyle={localStyles.signBtnContainer}
+                onPress={onPressSignWithPassword}
+                bgColor={isSubmitDisabled && colors.primary5}
+              />
 
+              <TouchableOpacity
+                onPress={onPressSignIn}
+                style={localStyles.signUpContainer}>
+                <EText
+                  type={'b16'}
+                  color={colors.dark ? colors.grayScale7 : colors.grayScale5}>
+                  {strings.dontHaveAccount}
+                </EText>
+                <EText type={'b16'} color={colors.primary5}>
+                  {' '}
+                  {strings.signUp}
+                </EText>
+              </TouchableOpacity>
+
+            </View>
           </View>
-        </View>
         </ImageBackground>
 
-        </KeyBoardAvoidWrapper>
-       
-    
+      </KeyBoardAvoidWrapper>
+
+
     </ESafeAreaView>
   );
 };
@@ -218,25 +240,25 @@ export default Login;
 
 const localStyles = StyleSheet.create({
   mainContainer: {
-   flex:1,
-   justifyContent:'center'
+    flex: 1,
+    justifyContent: 'center'
   },
   signBtnContainer: {
     ...styles.center,
     width: '100%',
     ...styles.mv20,
     height: getHeight(60),
-    borderRadius:10,
+    borderRadius: 10,
   },
   inputContainerStyle: {
     height: getHeight(60),
     ...styles.ph15,
-    borderBottomWidth:moderateScale(1.5),
-    borderTopWidth:moderateScale(1.5),
-    borderLeftWidth:moderateScale(1.5),
-    borderRightWidth:moderateScale(1.5),
-    borderRadius:10,
-    color:'#222'
+    borderBottomWidth: moderateScale(1.5),
+    borderTopWidth: moderateScale(1.5),
+    borderLeftWidth: moderateScale(1.5),
+    borderRightWidth: moderateScale(1.5),
+    borderRadius: 10,
+    color: '#222'
   },
   backgroundImage: {
     flex: 1,
@@ -245,25 +267,29 @@ const localStyles = StyleSheet.create({
   },
   inputBoxStyle: {
     ...styles.ph15,
-    color:'#222'
+    color: '#222'
   },
-  root:{
-    flex:3,
-    justifyContent:'center',
-    flexDirection:'column',
-   alignContent:'center',
-    backgroundColor:'white',
+  root: {
+    flex: 3,
+    justifyContent: 'center',
+    flexDirection: 'column',
+    alignContent: 'center',
+    backgroundColor: 'white',
   },
-  loginBg:{
-    backgroundColor:"#fff",
+  loginBg: {
+    backgroundColor: "#fff",
     ...styles.ph20,
-    borderTopRightRadius:30,
-    borderTopLeftRadius:30,
-    paddingTop:30
+    borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
+    paddingTop: 30
   },
   banner: {
     width: '60%',
     height: '30%',
     alignSelf: 'flex-end',
-},
+  },
+  signUpContainer: {
+    ...styles.rowCenter,
+    ...styles.mb20,
+  },
 });
