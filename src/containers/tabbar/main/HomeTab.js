@@ -29,7 +29,6 @@ const contactId = user ? user.contact_id : null;
 
   const [DATA, setData] = useState([])
 
-  
   const fetchBookingContact = (contactId) => {
     api
       .get('/booking/getBookingData')

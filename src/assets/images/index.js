@@ -1,5 +1,4 @@
 export default {
-  logo: require('../images/logo.png'),
   logo1: require('../images/logo.jpeg'),
   userDark: require('../images/userDark.png'),
   userLight: require('../images/userLight.png'),
