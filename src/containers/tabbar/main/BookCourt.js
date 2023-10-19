@@ -12,7 +12,7 @@ import { isAfter, format, parseISO } from 'date-fns';
 import api from '../../../api/api';
 import TimePicker from './TimePicker';
 
-const BookCourt = ({ route }) => {
+const BookCourt = ({ navigation,route }) => {
   const { user } = route.params;
 console.log(user)
   const [selected, setSelected] = React.useState('');
@@ -59,6 +59,7 @@ console.log(user)
               setSelectedStartDate('')
               setSelectedEndDate('')
               setSelectedTime('')
+              navigation.navigate('HomeTab', {insertedData: bookingData});
             } else {
               console.error('Error in booking for date:', date);
             }
@@ -83,6 +84,7 @@ console.log(user)
             alert('Thank You for booking court');
             setSelected('');
             setSelectedTime('')
+            navigation.navigate('HomeTab', {insertedData: bookingData});
           } else {
             alert('Error');
           }

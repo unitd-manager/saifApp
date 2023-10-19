@@ -14,7 +14,7 @@ import EText from '../../../components/common/EText';
 import { moderateScale } from '../../../common/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function HomeTab() {
+export default function HomeTab({ route }) {
 
   const colors = useSelector(state => state.theme.theme);
   const [extraData, setExtraData] = useState(true);
@@ -25,29 +25,49 @@ export default function HomeTab() {
     userData = JSON.parse(userData);
     setUserData(userData);
   };
-const contactId = user ? user.contact_id : null;
+  const contactId = user ? user.contact_id : null;
 
   const [DATA, setData] = useState([])
 
-  
   const fetchBookingContact = (contactId) => {
     api
       .get('/booking/getBookingData')
       .then((res) => {
-        console.log('API Response:', res.data);
         const filteredData = res.data.data.filter((element) => element.contact_id === contactId);
-  
+
         filteredData.forEach((element) => {
           element.tag = String(element.tag).split(',');
         });
-  
-        console.log('Transformed Data:', filteredData);
+
         setData(filteredData);
       })
       .catch((error) => {
         console.log('Error fetching data:', error);
       });
   };
+
+  useEffect(() => {
+    if (route.params && route.params.insertedData) {
+      setData((prevData) => [...prevData, route.params.insertedData]);
+    }
+
+    api
+      .get('/booking/getBookingData')
+      .then((res) => {
+        const filteredData = res.data.data.filter((element) => element.contact_id === contactId);
+
+        filteredData.forEach((element) => {
+          element.tag = String(element.tag).split(',');
+        });
+
+        setData(filteredData);
+      })
+      .catch((error) => {
+        console.log('Error fetching data:', error);
+      });
+
+
+  }, [route.params]);
 
   useEffect(() => {
     setExtraData(!extraData);
@@ -83,43 +103,55 @@ const contactId = user ? user.contact_id : null;
         <EText type="B20" numberOfLines={1} color="#222" style={{ margin: 20 }}>
           Booking History
         </EText>
-        <EText type="B14" numberOfLines={1} style={{ margin: 20, textDecorationLine: 'underline', }}>
+        {/* <EText type="B14" numberOfLines={1} style={{ margin: 20, textDecorationLine: 'underline', }}>
           View All
-        </EText>
+        </EText> */}
       </View>
 
 
       <View style={[localStyles.loginBg, { flex: .7 }]}>
 
-      <FlatList
-  data={DATA}
-  renderItem={({ item, index }) => {
-    const imageSource = item.hall === 'court 1'
-      ? require('../../../assets/images/tumb.jpg')
-      : item.hall === 'court 2'
-      ? require('../../../assets/images/court2.webp')
-      : require('../../../assets/images/tumb.jpg');
+        {contactId ? (
+          DATA.length > 0 ? (
+            <FlatList
+          data={DATA}
+          renderItem={({ item, index }) => {
+            const imageSource = item.hall === 'court 1'
+              ? require('../../../assets/images/tumb.jpg')
+              : item.hall === 'court 2'
+                ? require('../../../assets/images/court2.webp')
+                : require('../../../assets/images/tumb.jpg');
 
-    return (
-      <View style={localStyles.item}>
-        <View style={localStyles.itemLeft}>
-          <Image
-            style={[localStyles.circular, { backgroundColor: item.color }]}
-            source={imageSource}
-          />
-          <View>
-            <Text style={localStyles.heading}>{item.hall}</Text>
-            <View style={{ display: 'flex', flexDirection: 'row' }}>
-              <Text style={localStyles.power}>{item.booking_date}</Text>
-              <Text style={localStyles.power}>{item.assign_time}</Text>
+            return (
+              <View style={localStyles.item}>
+                <View style={localStyles.itemLeft}>
+                  <Image
+                    style={[localStyles.circular, { backgroundColor: item.color }]}
+                    source={imageSource}
+                  />
+                  <View>
+                    <Text style={localStyles.heading}>{item.hall}</Text>
+                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                      <Text style={localStyles.power}>{item.booking_date}</Text>
+                      <Text style={localStyles.power}>{item.assign_time}</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            );
+          }}
+          keyExtractor={(item) => item.contact_id.toString()}
+        /> 
+          ) : (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <EText type="m20" numberOfLines={1} color={'#fff'}> No Booking Records Found </EText>
             </View>
-          </View>
-        </View>
-      </View>
-    );
-  }}
-  keyExtractor={(item) => item.contact_id.toString()}
-/>
+          )
+        ) : (
+          <Text>Book Your Court</Text>
+        )}
+
+
       </View>
 
     </View>
