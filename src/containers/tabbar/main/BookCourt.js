@@ -48,7 +48,7 @@ console.log(user)
           assign_time: selectedTime,
           booking_date: date,
           hall: hall,
-          employee_id:staff_id
+          contact_id:user.contact_id
         };
 
         api
