@@ -1,9 +1,8 @@
 import React, { useState,useEffect } from 'react';
 import { Text, SafeAreaView, StyleSheet, TouchableOpacity } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import EText from '../../../components/common/EText';
 
-export const TimePicker = ({ setSelectedTime }) => {
+export const TimePicker = ({ setSelectedTime,setSelectedEndTime }) => {
   
   const initialTime = new Date();
   initialTime.setHours(0, 0, 0, 0);
@@ -31,6 +30,7 @@ const formatTime = (time) => {
       setShow(false);
       setDate(currentDate);
       setSelectedTime(formatTime(currentDate));
+      setSelectedEndTime(formatTime(currentDate))
     } else {
       alert('Please select a time between 6 AM and 10 PM.');
     }
@@ -42,7 +42,6 @@ const formatTime = (time) => {
   };
 
   const showMode = (currentMode) => {
-    // setShow(true);
     setMode(currentMode);
   };
 
@@ -54,7 +53,6 @@ const formatTime = (time) => {
 
   return (
     <SafeAreaView>
-        <EText type="B16" color="#222" align="center" style={{marginVertical:20}}> Please Select Time </EText>
         <TouchableOpacity style={Attendancestyles.timeButton} onPress={showTimepicker}>
             <Text style={{fontWeight:'600'}} >Select Time</Text>
         </TouchableOpacity>
@@ -82,7 +80,7 @@ const Attendancestyles = StyleSheet.create({
     fontWeight: 'bold'
   },
   timeButton: {
-    width: '50%',
+    width: '100%',
     height: 50,
     borderWidth:0.5,
     borderColor:'red',
@@ -90,6 +88,7 @@ const Attendancestyles = StyleSheet.create({
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal:15
   },
 
 });

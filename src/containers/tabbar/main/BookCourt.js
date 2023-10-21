@@ -11,44 +11,87 @@ import EButton from '../../../components/common/EButton';
 import { isAfter, format, parseISO } from 'date-fns';
 import api from '../../../api/api';
 import TimePicker from './TimePicker';
+import EText from '../../../components/common/EText';
 
-const BookCourt = ({ navigation,route }) => {
+const BookCourt = ({ navigation, route }) => {
   const { user } = route.params;
 
   const [selected, setSelected] = React.useState('');
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedEndTime, setSelectedEndTime] = useState(null);
   const [layout, setLayOut] = React.useState('daily');
   const colors = useSelector(state => state.theme.theme);
   const item = route.params.item;
 
   const selectedTabStyle = {
-    borderBottomWidth: 2, 
+    borderBottomWidth: 2,
     borderColor: '#fff',
-    position:'relative',
-    bottom:0
+    position: 'relative',
+    bottom: 0
   };
-  
+
   const unselectedTabStyle = {
     color: '#fff',
     fontWeight: '600',
   };
 
-  const Booking = (selectedDates, hall) => {
+  const handleTimeChange = (time) => {
+    setSelectedTime(time);
+  };
 
-    if (!selectedDates || !selectedTime) {
+  const handleEndTimeChange = (endTime) => {
+    setSelectedEndTime(endTime);
+  };
+
+  const Booking = (selectedDates, hall) => {
+    // Check the selectedDates, selectedTime, selectedEndTime is not null
+    if (!selectedDates || !selectedTime || !selectedEndTime) {
       alert('Please select a date and time before booking.');
       return;
     }
+
+    // Start calculate the per hr rate
+    const parseTime = (timeString) => {
+      const [time, period] = timeString.split(' ');
+      const [hours, minutes] = time.split(':');
+      let hour = parseInt(hours);
+      if (period.toLowerCase() === 'pm' && hour !== 12) {
+        hour += 12;
+      }
+      const date = new Date();
+      date.setHours(hour, parseInt(minutes), 0, 0);
+      return date;
+    };
+    
+    const startTime = parseTime(selectedTime);
+    const endTime = parseTime(selectedEndTime);
+    const rate = 30;
+
+    const timeDifferenceMs = endTime - startTime;
+    
+    const hours = Math.floor(timeDifferenceMs / (1000 * 60 * 60));
+    const minutes = Math.floor((timeDifferenceMs % (1000 * 60 * 60)) / (1000 * 60));
+    
+    const formattedResult = `${hours} hours ${minutes} min`;
+
+    const multipliedTimeDifference = (hours + minutes / 60) * rate;
+
+    console.log(`Total Time multiplied by ${rate}: ${multipliedTimeDifference}`);
+    console.log(formattedResult);
+
+  // End calculate the per hr rate
 
     if (Array.isArray(selectedDates) && selectedDates.length > 1) {
       selectedDates.forEach(date => {
         const bookingData = {
           assign_time: selectedTime,
+          to_assign_time: selectedEndTime,
           booking_date: date,
           hall: hall,
-          contact_id:user.contact_id
+          contact_id: user.contact_id,
+          total_hour:multipliedTimeDifference
         };
 
         api
@@ -58,7 +101,8 @@ const BookCourt = ({ navigation,route }) => {
               setSelectedStartDate('')
               setSelectedEndDate('')
               setSelectedTime('')
-              navigation.navigate('HomeTab', {insertedData: bookingData});
+              setSelectedEndTime('')
+              navigation.navigate('HomeTab', { insertedData: bookingData });
             } else {
               console.error('Error in booking for date:', date);
             }
@@ -73,19 +117,26 @@ const BookCourt = ({ navigation,route }) => {
 
       const bookingData = {
         assign_time: selectedTime,
+        to_assign_time: selectedEndTime,
         booking_date: selectedDates,
         hall: hall,
-        contact_id:user.contact_id
+        contact_id: user.contact_id,
+        total_hour:formattedResult,
+        total_hour_per_rate:multipliedTimeDifference,
       };
+
+      console.log("bookingData",bookingData)
 
       api
         .post('/booking/insertBooking', bookingData)
         .then(response => {
+          console.log("response",response)
           if (response.status === 200) {
             alert('Thank You for booking court');
             setSelected('');
             setSelectedTime('')
-            navigation.navigate('HomeTab', {insertedData: bookingData});
+            setSelectedEndTime('')
+            navigation.navigate('HomeTab', { insertedData: bookingData });
           } else {
             alert('Error');
           }
@@ -108,7 +159,8 @@ const BookCourt = ({ navigation,route }) => {
     if (layout == 'daily') {
       return (
         <>
-          <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <ScrollView style={{paddingBottom:30}}>
+          <View style={{ display: 'flex', justifyContent: 'space-between'}}>
             <Calendar
               style={{
                 borderWidth: 1,
@@ -141,22 +193,38 @@ const BookCourt = ({ navigation,route }) => {
               }}
             />
 
-            <TimePicker setSelectedTime={setSelectedTime} />
+            <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Please Select Time</EText>
+            <View style={Attendancestyles.time}>
+              <View>
+                <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Start Time </EText>
+                <TimePicker setSelectedTime={handleTimeChange} />
+              </View>
+
+              <View>
+                <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}> End Time </EText>
+                <TimePicker setSelectedTime={handleEndTimeChange} />
+              </View>
+            </View>
+
 
             {selected && (
               <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selected}</Text>
             )}
             {selectedTime && (
-              <Text style={Attendancestyles.selectedDateText}>Selected Time: {selectedTime}</Text>
+              <Text style={Attendancestyles.selectedDateText}>Selected Start Time: {selectedTime}</Text>
+            )}
+            {selectedEndTime && (
+              <Text style={Attendancestyles.selectedDateText}>Selected End Time: {selectedEndTime}</Text>
             )}
           </View>
-
+        </ScrollView>
         </>
       );
     }
     else if (layout == 'Weekly') {
       return (
         <>
+        <ScrollView style={{paddingBottom:30}}>
           <Calendar
             style={{
               borderWidth: 1,
@@ -181,7 +249,19 @@ const BookCourt = ({ navigation,route }) => {
             onDayPress={(day) => handleDateSelect(day.dateString)}
             markedDates={getMarked()}
           />
-          <TimePicker setSelectedTime={setSelectedTime} />
+
+            <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Please Select Time</EText>
+            <View style={Attendancestyles.time}>
+              <View>
+                <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Start Time </EText>
+                <TimePicker setSelectedTime={handleTimeChange} />
+              </View>
+
+              <View>
+                <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}> End Time </EText>
+                <TimePicker setSelectedTime={handleEndTimeChange} />
+              </View>
+            </View>
 
           {selectedStartDate && (
             <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selectedStartDate}</Text>
@@ -189,9 +269,14 @@ const BookCourt = ({ navigation,route }) => {
           {selectedEndDate && (
             <Text style={Attendancestyles.selectedDateText}>Selected End Date: {selectedEndDate}</Text>
           )}
-           {selectedTime && (
-              <Text style={Attendancestyles.selectedDateText}>Selected Time: {selectedTime}</Text>
-            )}
+          {selectedTime && (
+            <Text style={Attendancestyles.selectedDateText}>Selected Time: {selectedTime}</Text>
+          )}
+          {selectedEndTime && (
+            <Text style={Attendancestyles.selectedDateText}>Selected End Time: {selectedEndTime}</Text>
+          )}
+
+</ScrollView>
         </>
       );
     }
@@ -201,39 +286,69 @@ const BookCourt = ({ navigation,route }) => {
     if (selectedStartDate === null || (selectedStartDate && selectedEndDate)) {
       setSelectedStartDate(date);
       setSelectedEndDate(null);
-    } else if (selectedStartDate && !selectedEndDate) {
-      setSelectedEndDate(date);
+    } else {
+      const newSelectedEndDate = date;
+      const startDate = new Date(selectedStartDate);
+      const endDate = new Date(newSelectedEndDate);
+
+      // Check if the new end date is after the start date
+      if (endDate > startDate) {
+        const dayDifference = Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+
+        if (dayDifference < 2) {
+          alert('Please select a minimum of 2 days.');
+        } else if (dayDifference <= 7) {
+          setSelectedEndDate(newSelectedEndDate);
+        } else {
+          alert('You can only select a maximum of 7 days.');
+        }
+      } else {
+        alert('You can\'t select end date smaller than start date');
+      }
     }
+
   };
 
   const getMarked = () => {
     let marked = {};
+    // const today = new Date();
 
-    if (selectedStartDate && selectedEndDate) {
-      const currentDate = new Date(selectedStartDate);
-      while (currentDate <= new Date(selectedEndDate)) {
-        const dateString = currentDate.toISOString().split('T')[0];
-        marked[dateString] = {
-          color: '#163a71',
-          textColor: '#fff',
-          disabled: true,
-        };
+    if (selectedStartDate) {
+      marked[selectedStartDate] = {
+        color: '#163a71',
+        textColor: '#fff',
+        startingDay: true,
+      };
 
-        if (currentDate.toISOString().split('T')[0] === selectedStartDate) {
-          marked[dateString].startingDay = true;
+      if (selectedEndDate) {
+        const currentDate = new Date(selectedStartDate);
+        while (currentDate <= new Date(selectedEndDate)) {
+          const dateString = currentDate.toISOString().split('T')[0];
+          marked[dateString] = {
+            color: '#163a71',
+            textColor: '#fff',
+          };
+
+          if (currentDate.toISOString().split('T')[0] === selectedEndDate) {
+            marked[dateString].endingDay = true;
+          }
+          currentDate.setDate(currentDate.getDate() + 1);
         }
-
-        if (currentDate.toISOString().split('T')[0] === selectedEndDate) {
-          marked[dateString].endingDay = true;
-        }
-
-        currentDate.setDate(currentDate.getDate() + 1);
       }
     }
 
+    // const currentDate = new Date(selectedStartDate);
+    // while (currentDate < today) {
+    //   const dateString = currentDate.toISOString().split('T')[0];
+    //   marked[dateString] = {
+    //     disabled: true,
+    //     disableTouchEvent: true,
+    //   };
+    //   currentDate.setDate(currentDate.getDate() + 1);
+    // }
+
     return marked;
   };
-
 
   const getSelectedDates = () => {
     const selectedDates = [];
@@ -262,19 +377,20 @@ const BookCourt = ({ navigation,route }) => {
           onPress={() => {
             setLayOut('daily');
           }}
-          style={[Attendancestyles.head,layout === 'daily' ? selectedTabStyle : unselectedTabStyle]}
-          >
+          style={[Attendancestyles.head, layout === 'daily' ? selectedTabStyle : unselectedTabStyle]}
+        >
           <Text style={{ color: '#fff', fontWeight: '600' }}>Daily</Text>
         </TouchableRipple>
         <TouchableRipple
           onPress={() => {
             setLayOut('Weekly');
           }}
-          style={[Attendancestyles.head,layout === 'Weekly' ? selectedTabStyle : unselectedTabStyle]}
-          >
+          style={[Attendancestyles.head, layout === 'Weekly' ? selectedTabStyle : unselectedTabStyle]}
+        >
           <Text style={{ color: '#fff', fontWeight: '600' }}>Weekly</Text>
         </TouchableRipple>
       </View>
+
       <ScrollView style={{ padding: 15 }}>{renderLayout()}</ScrollView>
 
       {layout === 'daily' && (
@@ -346,11 +462,11 @@ const Attendancestyles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    backgroundColor: '#FEE4D8',
+    // backgroundColor: '#FEE4D8',
     ...styles.pb10,
     ...styles.ph20,
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
+    // borderBottomLeftRadius: 5,
+    // borderBottomRightRadius: 5,
   },
   dateText: {
     textAlign: 'center',
