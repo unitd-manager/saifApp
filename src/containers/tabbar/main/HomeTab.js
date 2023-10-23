@@ -138,7 +138,8 @@ export default function HomeTab({ route }) {
                     <View style={localStyles.containerRow}>
                       <Text style={localStyles.power}>{item.booking_date}</Text>
                       <Text style={localStyles.power}>{item.assign_time}</Text>
-                      {item.total_hour_per_rate && <Text style={localStyles.power}>{item.total_hour_per_rate} rs/-</Text> } 
+                      <Text style={localStyles.power}>{item.to_assign_time}</Text>
+                      {/* {item.total_hour_per_rate && <Text style={localStyles.power}>{item.total_hour_per_rate} rs/-</Text> }  */}
                     </View>
                 </View>
               </View>

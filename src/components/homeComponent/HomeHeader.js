@@ -102,7 +102,14 @@ function HomeHeader({user}) {
           </EText>
           
         </View>
-
+        <TouchableOpacity
+          onPress={onPressLogOutBtn}
+          style={[
+            localStyles.notificationContainer,
+            {borderColor: colors.dark ? colors.grayScale8 : colors.grayScale3},
+          ]}>
+        <Text>Help</Text>
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={onPressLogOutBtn}
           style={[

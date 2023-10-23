@@ -45,6 +45,29 @@ const BookCourt = ({ navigation, route }) => {
     }
   };
 
+  const SendEmailWeekly =(emailData)=>{
+    console.log("emailData",emailData.assign_time)
+    const to = user.email;
+    const subject = "Saif Registration";
+    const fromTime=emailData.assign_time;
+    const toTime =emailData.to_assign_time;
+    const dateFromBooking =emailData.booking_date;
+    // const dateToBooking =emailData.selectedEndDate;
+    const hall=emailData.hall;
+      api
+    .post('/commonApi/sendUseremailBooking', {to,subject,fromTime,toTime,dateFromBooking,hall})
+    .then(response => {
+        if (response.status === 200) {
+            alert('Email sent successfully');
+            // setTimeout(() => {
+            //    navigation.navigate(StackNav.Login)
+            //   }, 500);
+        } else {
+            console.error('Error');
+        }
+    })
+}
+
   const handleEndTimeChange = (endTime) => {
     if (selectedTime && endTime <= selectedTime) {
       alert("End time must be after the start time.");
@@ -110,6 +133,7 @@ const BookCourt = ({ navigation, route }) => {
               setSelectedEndDate('')
               setSelectedTime('')
               setSelectedEndTime('')
+              SendEmailWeekly(bookingData)
               navigation.navigate('HomeTab', { insertedData: bookingData });
             } else {
               console.error('Error in booking for date:', date);
@@ -144,6 +168,7 @@ const BookCourt = ({ navigation, route }) => {
             setSelected('');
             setSelectedTime('')
             setSelectedEndTime('')
+            SendEmailWeekly(bookingData)
             navigation.navigate('HomeTab', { insertedData: bookingData });
           } else {
             alert('Error');
