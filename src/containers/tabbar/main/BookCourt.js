@@ -38,11 +38,19 @@ const BookCourt = ({ navigation, route }) => {
   };
 
   const handleTimeChange = (time) => {
+    console.log("time", time)
     setSelectedTime(time);
+    if (selectedEndTime && selectedEndTime <= time) {
+      setSelectedEndTime(null);
+    }
   };
 
   const handleEndTimeChange = (endTime) => {
-    setSelectedEndTime(endTime);
+    if (selectedTime && endTime <= selectedTime) {
+      alert("End time must be after the start time.");
+    } else {
+      setSelectedEndTime(endTime);
+    }
   };
 
   const Booking = (selectedDates, hall) => {
@@ -64,16 +72,16 @@ const BookCourt = ({ navigation, route }) => {
       date.setHours(hour, parseInt(minutes), 0, 0);
       return date;
     };
-    
+
     const startTime = parseTime(selectedTime);
     const endTime = parseTime(selectedEndTime);
     const rate = 30;
 
     const timeDifferenceMs = endTime - startTime;
-    
+
     const hours = Math.floor(timeDifferenceMs / (1000 * 60 * 60));
     const minutes = Math.floor((timeDifferenceMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     const formattedResult = `${hours} hours ${minutes} min`;
 
     const multipliedTimeDifference = (hours + minutes / 60) * rate;
@@ -81,7 +89,7 @@ const BookCourt = ({ navigation, route }) => {
     console.log(`Total Time multiplied by ${rate}: ${multipliedTimeDifference}`);
     console.log(formattedResult);
 
-  // End calculate the per hr rate
+    // End calculate the per hr rate
 
     if (Array.isArray(selectedDates) && selectedDates.length > 1) {
       selectedDates.forEach(date => {
@@ -91,7 +99,7 @@ const BookCourt = ({ navigation, route }) => {
           booking_date: date,
           hall: hall,
           contact_id: user.contact_id,
-          total_hour:multipliedTimeDifference
+          total_hour: multipliedTimeDifference
         };
 
         api
@@ -121,16 +129,16 @@ const BookCourt = ({ navigation, route }) => {
         booking_date: selectedDates,
         hall: hall,
         contact_id: user.contact_id,
-        total_hour:formattedResult,
-        total_hour_per_rate:multipliedTimeDifference,
+        total_hour: formattedResult,
+        total_hour_per_rate: multipliedTimeDifference,
       };
 
-      console.log("bookingData",bookingData)
+      console.log("bookingData", bookingData)
 
       api
         .post('/booking/insertBooking', bookingData)
         .then(response => {
-          console.log("response",response)
+          console.log("response", response)
           if (response.status === 200) {
             alert('Thank You for booking court');
             setSelected('');
@@ -159,14 +167,84 @@ const BookCourt = ({ navigation, route }) => {
     if (layout == 'daily') {
       return (
         <>
-        <ScrollView style={{paddingBottom:30}}>
-          <View style={{ display: 'flex', justifyContent: 'space-between'}}>
+          <ScrollView style={{ paddingBottom: 30 }}>
+            <View style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Calendar
+                style={{
+                  borderWidth: 1,
+                  borderColor: colors.backgroundColor,
+                  height: 340,
+                  borderRadius: moderateScale(5),
+                }}
+                theme={{
+                  selectedDayBackgroundColor: colors.backgroundColor,
+                  todayTextColor: colors.backgroundColor,
+                  arrowColor: colors.backgroundColor,
+                  'stylesheet.calendar.header': {
+                    dayTextAtIndex0: {
+                      color: 'red',
+                    },
+                    dayTextAtIndex6: {
+                      color: 'green',
+                    },
+                  },
+                }}
+                onDayPress={day => {
+                  const selectedDate = new Date(day.dateString);
+                  const today = new Date();
+                  if (selectedDate < today) {
+                    alert('Please select a date in the future.');
+                  } else {
+                    setSelected(day.dateString);
+                  }
+                }}
+
+                markedDates={{
+                  [selected]: {
+                    selected: true,
+                    disableTouchEvent: true,
+                    selectedDotColor: colors.backgroundColor,
+                  },
+                }}
+              />
+
+              <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Please Select Time</EText>
+              <View style={Attendancestyles.time}>
+                <View>
+                  <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Start Time </EText>
+                  <TimePicker setSelectedTime={handleTimeChange} />
+                </View>
+
+                {selectedTime && (
+                  <View>
+                    <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>End Time</EText>
+                    <TimePicker setSelectedTime={handleEndTimeChange} />
+                  </View>
+                )}
+              </View>
+              {selected && (
+                <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selected}</Text>
+              )}
+              {selectedTime && (
+                <Text style={Attendancestyles.selectedDateText}>Selected Start Time: {selectedTime}</Text>
+              )}
+              {selectedEndTime && (
+                <Text style={Attendancestyles.selectedDateText}>Selected End Time: {selectedEndTime}</Text>
+              )}
+            </View>
+          </ScrollView>
+        </>
+      );
+    }
+    else if (layout == 'Weekly') {
+      return (
+        <>
+          <ScrollView style={{ paddingBottom: 30 }}>
             <Calendar
               style={{
                 borderWidth: 1,
                 borderColor: colors.backgroundColor,
                 height: 340,
-                borderRadius: moderateScale(5),
               }}
               theme={{
                 selectedDayBackgroundColor: colors.backgroundColor,
@@ -181,16 +259,10 @@ const BookCourt = ({ navigation, route }) => {
                   },
                 },
               }}
-              onDayPress={day => {
-                setSelected(day.dateString);
-              }}
-              markedDates={{
-                [selected]: {
-                  selected: true,
-                  disableTouchEvent: true,
-                  selectedDotColor: colors.backgroundColor,
-                },
-              }}
+              initialDate={getCurrentDate()}
+              markingType="period"
+              onDayPress={(day) => handleDateSelect(day.dateString)}
+              markedDates={getMarked()}
             />
 
             <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Please Select Time</EText>
@@ -200,15 +272,19 @@ const BookCourt = ({ navigation, route }) => {
                 <TimePicker setSelectedTime={handleTimeChange} />
               </View>
 
-              <View>
-                <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}> End Time </EText>
-                <TimePicker setSelectedTime={handleEndTimeChange} />
-              </View>
+              {selectedTime && (
+                <View>
+                  <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>End Time</EText>
+                  <TimePicker setSelectedTime={handleEndTimeChange} />
+                </View>
+              )}
             </View>
 
-
-            {selected && (
-              <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selected}</Text>
+            {selectedStartDate && (
+              <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selectedStartDate}</Text>
+            )}
+            {selectedEndDate && (
+              <Text style={Attendancestyles.selectedDateText}>Selected End Date: {selectedEndDate}</Text>
             )}
             {selectedTime && (
               <Text style={Attendancestyles.selectedDateText}>Selected Start Time: {selectedTime}</Text>
@@ -216,85 +292,31 @@ const BookCourt = ({ navigation, route }) => {
             {selectedEndTime && (
               <Text style={Attendancestyles.selectedDateText}>Selected End Time: {selectedEndTime}</Text>
             )}
-          </View>
-        </ScrollView>
-        </>
-      );
-    }
-    else if (layout == 'Weekly') {
-      return (
-        <>
-        <ScrollView style={{paddingBottom:30}}>
-          <Calendar
-            style={{
-              borderWidth: 1,
-              borderColor: colors.backgroundColor,
-              height: 340,
-            }}
-            theme={{
-              selectedDayBackgroundColor: colors.backgroundColor,
-              todayTextColor: colors.backgroundColor,
-              arrowColor: colors.backgroundColor,
-              'stylesheet.calendar.header': {
-                dayTextAtIndex0: {
-                  color: 'red',
-                },
-                dayTextAtIndex6: {
-                  color: 'green',
-                },
-              },
-            }}
-            initialDate={getCurrentDate()}
-            markingType="period"
-            onDayPress={(day) => handleDateSelect(day.dateString)}
-            markedDates={getMarked()}
-          />
 
-            <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Please Select Time</EText>
-            <View style={Attendancestyles.time}>
-              <View>
-                <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}>Start Time </EText>
-                <TimePicker setSelectedTime={handleTimeChange} />
-              </View>
-
-              <View>
-                <EText type="B16" color="#222" align="center" style={{ marginVertical: 20 }}> End Time </EText>
-                <TimePicker setSelectedTime={handleEndTimeChange} />
-              </View>
-            </View>
-
-          {selectedStartDate && (
-            <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selectedStartDate}</Text>
-          )}
-          {selectedEndDate && (
-            <Text style={Attendancestyles.selectedDateText}>Selected End Date: {selectedEndDate}</Text>
-          )}
-          {selectedTime && (
-            <Text style={Attendancestyles.selectedDateText}>Selected Time: {selectedTime}</Text>
-          )}
-          {selectedEndTime && (
-            <Text style={Attendancestyles.selectedDateText}>Selected End Time: {selectedEndTime}</Text>
-          )}
-
-</ScrollView>
+          </ScrollView>
         </>
       );
     }
   };
 
   const handleDateSelect = (date) => {
-    if (selectedStartDate === null || (selectedStartDate && selectedEndDate)) {
+    const selectedDate = new Date(date);
+    const today = new Date();
+  
+    if (selectedDate < today) {
+      alert('You can\'t select a past date');
+    } else if (selectedStartDate === null || (selectedStartDate && selectedEndDate)) {
       setSelectedStartDate(date);
       setSelectedEndDate(null);
     } else {
       const newSelectedEndDate = date;
       const startDate = new Date(selectedStartDate);
       const endDate = new Date(newSelectedEndDate);
-
+  
       // Check if the new end date is after the start date
       if (endDate > startDate) {
         const dayDifference = Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-
+  
         if (dayDifference < 2) {
           alert('Please select a minimum of 2 days.');
         } else if (dayDifference <= 7) {
@@ -303,15 +325,14 @@ const BookCourt = ({ navigation, route }) => {
           alert('You can only select a maximum of 7 days.');
         }
       } else {
-        alert('You can\'t select end date smaller than start date');
+        alert("You can't select an end date earlier than the start date.");
       }
     }
-
   };
 
   const getMarked = () => {
     let marked = {};
-    // const today = new Date();
+    const today = new Date();
 
     if (selectedStartDate) {
       marked[selectedStartDate] = {
@@ -337,15 +358,15 @@ const BookCourt = ({ navigation, route }) => {
       }
     }
 
-    // const currentDate = new Date(selectedStartDate);
-    // while (currentDate < today) {
-    //   const dateString = currentDate.toISOString().split('T')[0];
-    //   marked[dateString] = {
-    //     disabled: true,
-    //     disableTouchEvent: true,
-    //   };
-    //   currentDate.setDate(currentDate.getDate() + 1);
-    // }
+    const currentDate = new Date(selectedStartDate);
+    while (currentDate < today) {
+      const dateString = currentDate.toISOString().split('T')[0];
+      marked[dateString] = {
+        disabled: true,
+        disableTouchEvent: true,
+      };
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
 
     return marked;
   };
@@ -462,11 +483,8 @@ const Attendancestyles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    // backgroundColor: '#FEE4D8',
     ...styles.pb10,
     ...styles.ph20,
-    // borderBottomLeftRadius: 5,
-    // borderBottomRightRadius: 5,
   },
   dateText: {
     textAlign: 'center',

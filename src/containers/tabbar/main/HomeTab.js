@@ -25,6 +25,7 @@ export default function HomeTab({ route }) {
     userData = JSON.parse(userData);
     setUserData(userData);
   };
+
   const contactId = user ? user.contact_id : null;
 
   const [DATA, setData] = useState([])
@@ -40,6 +41,8 @@ export default function HomeTab({ route }) {
         });
 
         setData(filteredData);
+
+        console.log("DATA",DATA)
       })
       .catch((error) => {
         console.log('Error fetching data:', error);
@@ -108,7 +111,6 @@ export default function HomeTab({ route }) {
         </EText> */}
       </View>
 
-
       <View style={[localStyles.loginBg, { flex: .7 }]}>
 
         {contactId ? (
@@ -124,18 +126,20 @@ export default function HomeTab({ route }) {
 
             return (
               <View style={localStyles.item}>
-                <View style={localStyles.itemLeft}>
-                  <Image
+                <Image
                     style={[localStyles.circular, { backgroundColor: item.color }]}
                     source={imageSource}
                   />
-                  <View>
-                    <Text style={localStyles.heading}>{item.hall}</Text>
-                    <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <View style={localStyles.itemLeft}>
+                    <View style={localStyles.containerRow}>
+                      <Text style={localStyles.heading}>{item.hall}</Text>
+                      <Text style={localStyles.power}>{item.total_hour}</Text>
+                    </View>
+                    <View style={localStyles.containerRow}>
                       <Text style={localStyles.power}>{item.booking_date}</Text>
                       <Text style={localStyles.power}>{item.assign_time}</Text>
+                      {item.total_hour_per_rate && <Text style={localStyles.power}>{item.total_hour_per_rate} rs/-</Text> } 
                     </View>
-                  </View>
                 </View>
               </View>
             );
@@ -181,6 +185,11 @@ const localStyles = StyleSheet.create({
     ...styles.ph20,
     ...styles.pb20,
   },
+  containerRow:{
+    display: 'flex', 
+    flexDirection: 'row',
+    justifyContent:'space-between',
+  },
   card: {
     backgroundColor: '#13458cbd',
     display: 'flex',
@@ -190,7 +199,7 @@ const localStyles = StyleSheet.create({
     ...styles.ph20,
   },
   left: {
-    maxWidth: '70%',
+    width: '70%',
   },
   loginBg: {
     backgroundColor: "#0d4c99",
@@ -201,20 +210,16 @@ const localStyles = StyleSheet.create({
   },
 
   item: {
-    // backgroundColor: '#FFF',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    height: 70,
+    height: 75,
     width: '95%',
     alignSelf: 'center',
-    // marginVertical: 10,
     borderBottomColor: '#dedede',
     borderBottomWidth: 0.5
   },
   itemLeft: {
-    flexDirection: 'row',
-
+    width:'80%'
   },
   heading: {
     fontSize: 16,
