@@ -108,7 +108,7 @@ function HomeHeader({user}) {
             localStyles.notificationContainer,
             {borderColor: colors.dark ? colors.grayScale8 : colors.grayScale3},
           ]}>
-        <Text>Help</Text>
+        {/* <Text>Help</Text> */}
         </TouchableOpacity>
         <TouchableOpacity
           onPress={onPressLogOutBtn}

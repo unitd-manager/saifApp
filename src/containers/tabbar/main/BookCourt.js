@@ -38,35 +38,34 @@ const BookCourt = ({ navigation, route }) => {
   };
 
   const handleTimeChange = (time) => {
-    console.log("time", time)
     setSelectedTime(time);
     if (selectedEndTime && selectedEndTime <= time) {
       setSelectedEndTime(null);
     }
   };
 
-  const SendEmailWeekly =(emailData)=>{
-    console.log("emailData",emailData.assign_time)
+  const SendEmailWeekly = (emailData) => {
+    console.log("emailData", emailData)
     const to = user.email;
     const subject = "Saif Registration";
-    const fromTime=emailData.assign_time;
-    const toTime =emailData.to_assign_time;
-    const dateFromBooking =emailData.booking_date;
+    const fromTime = emailData.assign_time;
+    const toTime = emailData.to_assign_time;
+    const dateFromBooking = emailData.booking_date;
     // const dateToBooking =emailData.selectedEndDate;
-    const hall=emailData.hall;
-      api
-    .post('/commonApi/sendUseremailBooking', {to,subject,fromTime,toTime,dateFromBooking,hall})
-    .then(response => {
+    const hall = emailData.hall;
+    api
+      .post('/commonApi/sendUseremailBooking', { to, subject, fromTime, toTime, dateFromBooking, hall })
+      .then(response => {
         if (response.status === 200) {
-            alert('Email sent successfully');
-            // setTimeout(() => {
-            //    navigation.navigate(StackNav.Login)
-            //   }, 500);
+          alert('Email sent successfully');
+          // setTimeout(() => {
+          //    navigation.navigate(StackNav.Login)
+          //   }, 500);
         } else {
-            console.error('Error');
+          console.error('Error');
         }
-    })
-}
+      })
+  }
 
   const handleEndTimeChange = (endTime) => {
     if (selectedTime && endTime <= selectedTime) {
@@ -109,9 +108,6 @@ const BookCourt = ({ navigation, route }) => {
 
     const multipliedTimeDifference = (hours + minutes / 60) * rate;
 
-    console.log(`Total Time multiplied by ${rate}: ${multipliedTimeDifference}`);
-    console.log(formattedResult);
-
     // End calculate the per hr rate
 
     if (Array.isArray(selectedDates) && selectedDates.length > 1) {
@@ -122,7 +118,8 @@ const BookCourt = ({ navigation, route }) => {
           booking_date: date,
           hall: hall,
           contact_id: user.contact_id,
-          total_hour: multipliedTimeDifference
+          total_hour: formattedResult,
+          total_hour_per_rate: multipliedTimeDifference,
         };
 
         api
@@ -157,12 +154,9 @@ const BookCourt = ({ navigation, route }) => {
         total_hour_per_rate: multipliedTimeDifference,
       };
 
-      console.log("bookingData", bookingData)
-
       api
         .post('/booking/insertBooking', bookingData)
         .then(response => {
-          console.log("response", response)
           if (response.status === 200) {
             alert('Thank You for booking court');
             setSelected('');
@@ -327,7 +321,7 @@ const BookCourt = ({ navigation, route }) => {
   const handleDateSelect = (date) => {
     const selectedDate = new Date(date);
     const today = new Date();
-  
+
     if (selectedDate < today) {
       alert('You can\'t select a past date');
     } else if (selectedStartDate === null || (selectedStartDate && selectedEndDate)) {
@@ -337,11 +331,11 @@ const BookCourt = ({ navigation, route }) => {
       const newSelectedEndDate = date;
       const startDate = new Date(selectedStartDate);
       const endDate = new Date(newSelectedEndDate);
-  
+
       // Check if the new end date is after the start date
       if (endDate > startDate) {
         const dayDifference = Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
-  
+
         if (dayDifference < 2) {
           alert('Please select a minimum of 2 days.');
         } else if (dayDifference <= 7) {
