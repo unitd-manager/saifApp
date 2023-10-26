@@ -90,7 +90,7 @@ const BookCourt = ({ navigation, route }) => {
           toTime,
           dateFromBooking,
           dateToBooking,
-          // hall,
+          hall,
         })
         .then(response => {
           if (response.status === 200) {
@@ -103,16 +103,35 @@ const BookCourt = ({ navigation, route }) => {
   };
 
   const handleEndTimeChange = (endTime) => {
-    if (selectedTime && endTime <= selectedTime) {
+    // Convert time strings to timestamps
+    const selectedTimeTimestamp = getTimeStamp(selectedTime);
+    const endTimeTimestamp = getTimeStamp(endTime);
+  
+    if (selectedTimeTimestamp && endTimeTimestamp <= selectedTimeTimestamp) {
       alert("End time must be after the start time.");
+      return;
     } else {
       setSelectedEndTime(endTime);
     }
   };
-
+  
+  // Function to convert time strings to timestamps
+  function getTimeStamp(timeStr) {
+    if (!timeStr) {
+      return null;
+    }
+  
+    // Parse the time string
+    const [hours, minutes, period] = timeStr.split(/:| /);
+    const isPM = period.toLowerCase() === "pm";
+    const hour = parseInt(hours) % 12;
+    const minute = parseInt(minutes);
+  
+    // Calculate the timestamp
+    return isPM ? (hour + 12) * 60 + minute : hour * 60 + minute;
+  }
   const Booking = (selectedDates, hall, price) => {
 
-    console.log(selectedDates, hall, price)
     // Check the selectedDates, selectedTime, selectedEndTime is not null
     if (!selectedDates || !selectedTime || !selectedEndTime) {
       alert('Please select a date and time before booking.');
