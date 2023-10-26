@@ -1,18 +1,15 @@
-import { StyleSheet, View, Text, FlatList, Image } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Image,TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { FlashList } from '@shopify/flash-list';
 import { Tournament } from '../../../assets/svgs';
-
-// Custom Imports
 import { styles } from '../../../themes';
-import { popularEventData } from '../../../api/constant';
 import api from '../../../api/api'
 import HomeHeader from '../../../components/homeComponent/HomeHeader';
 import SmallCardComponent from '../../../components/homeComponent/SmallCardComponent';
 import EText from '../../../components/common/EText';
-import { moderateScale } from '../../../common/constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { deviceWidth, moderateScale } from '../../../common/constants';
 
 export default function HomeTab({ route }) {
 
@@ -41,8 +38,6 @@ export default function HomeTab({ route }) {
         });
 
         setData(filteredData);
-
-        console.log("DATA",DATA)
       })
       .catch((error) => {
         console.log('Error fetching data:', error);
@@ -81,8 +76,25 @@ export default function HomeTab({ route }) {
     fetchBookingContact(contactId);
   }, [contactId]);
 
+  const [amount, setAmount] = useState([])
 
-  const renderCategoryItem = ({ item, index }) => {
+  const CourtAmmount = () => {
+    api
+      .get('/setting/getCourtAmount')
+      .then((res) => {
+        setAmount(res.data.data);
+      })
+      .catch((error) => {
+        console.log('Error fetching data:', error);
+      });
+  };
+
+  useEffect(()=>{
+    CourtAmmount();
+  },[])
+
+
+  const renderCategoryItem = ({item, index}) => {
     return <SmallCardComponent item={item} key={index} user={user} />;
   };
 
@@ -90,8 +102,7 @@ export default function HomeTab({ route }) {
     <View style={[styles.flexGrow1, { backgroundColor: '#f5f5f5', flexDirection: 'column' }]}>
       <HomeHeader user={user} />
       <FlashList
-        data={popularEventData}
-        extraData={extraData}
+        data={amount}
         renderItem={renderCategoryItem}
         keyExtractor={(item, index) => index.toString()}
         estimatedItemSize={10}
@@ -139,7 +150,6 @@ export default function HomeTab({ route }) {
                       <Text style={localStyles.power}>{item.booking_date}</Text>
                       <Text style={localStyles.power}>{item.assign_time}</Text>
                       <Text style={localStyles.power}>{item.to_assign_time}</Text>
-                      {/* {item.total_hour_per_rate && <Text style={localStyles.power}>{item.total_hour_per_rate} rs/-</Text> }  */}
                     </View>
                 </View>
               </View>
@@ -182,6 +192,17 @@ const RenderHeaderItem = React.memo(() => {
 });
 
 const localStyles = StyleSheet.create({
+  root: {
+    ...styles.pb10,
+    ...styles.m10,
+    ...styles.flex,
+    ...styles.shadowStyle,
+    ...styles.justifyCenter,
+    width: (deviceWidth - moderateScale(120)) / 2,
+    ...styles.mt15,
+    borderRadius: moderateScale(10),
+    backgroundColor:'#000'
+  },
   contentContainerStyle: {
     ...styles.ph20,
     ...styles.pb20,

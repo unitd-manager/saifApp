@@ -1,6 +1,5 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {StackRoute} from '../NavigationRoutes';
 import {StackNav} from '../NavigationKeys';
 import AuthStack from './AuthStack';
 import AuthContext, {defaultState, reducer, restoreToken} from './Auth';

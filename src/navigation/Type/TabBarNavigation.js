@@ -8,14 +8,8 @@ import {TabRoute} from '../NavigationRoutes';
 import {TabNav} from '../NavigationKeys';
 import {styles} from '../../themes';
 import {getHeight} from '../../common/constants';
-import strings from '../../i18n/strings';
 import EText from '../../components/common/EText';
-import {
-  HomeActiveWh,
-  HomeUnActive,
-  TicketActiveWh,
-  TicketUnActive,
-} from '../../assets/svgs';
+
 
 export default function TabBarNavigation() {
   const colors = useSelector(state => state.theme.theme);

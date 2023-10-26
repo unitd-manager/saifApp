@@ -2,61 +2,60 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  View,
+  View
 } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
-
-// Custom Imports
 import EText from '../common/EText';
 import { commonColor, styles } from '../../themes';
 import { deviceWidth, getHeight, moderateScale } from '../../common/constants';
+import images from '../../assets/images';
 
-export default function SmallCardComponent({ item, index,user }) {
+export default function SmallCardComponent({ item, index, user }) {
 
   const navigation = useNavigation();
   const colors = useSelector(state => state.theme.theme);
 
   const onPressDetail = () => {
-    if (item.url === 'BookCourt') {
-      navigation.navigate('BookCourt', { item,user});
-    } 
+    navigation.navigate('BookCourt', { item, user });
   };
 
   return (
-    
     <TouchableOpacity
       style={[
         localStyles.root,
         index % 2 === 0 ? styles.mr5 : styles.ml5,
         { backgroundColor: colors.white ? '#fafafa' : colors.white },
       ]}
-      onPress={onPressDetail} 
-      >
-
-      <Image
-        style={localStyles.imageStyle}
-        source={item?.image}
-      />
+      onPress={onPressDetail}
+    >
+      {item?.setting_id === 358 ?
+        <Image
+          style={localStyles.imageStyle}
+          source={images.court1}
+        />
+        : <Image
+          style={localStyles.imageStyle}
+          source={images.court2}
+        />
+      }
 
       <View style={localStyles.locationSubContainer}>
         <EText
           type={'S16'}
           numberOfLines={1}
           style={localStyles.textStyle}>
-          {item?.title}
+          {item?.key_text}
         </EText>
 
         <EText
           type={'S16'}
           numberOfLines={1}
           style={localStyles.price}>
-          {'₹ 30'}
+          {'₹/hr '}{item?.value}
         </EText>
       </View>
-
-
 
     </TouchableOpacity>
   );
@@ -72,6 +71,7 @@ const localStyles = StyleSheet.create({
     width: (deviceWidth - moderateScale(120)) / 2,
     ...styles.mt15,
     borderRadius: moderateScale(10),
+    backgroundColor: '#000'
   },
   imageStyle: {
     width: '100%',

@@ -25,6 +25,9 @@ const BookCourt = ({ navigation, route }) => {
   const colors = useSelector(state => state.theme.theme);
   const item = route.params.item;
 
+
+  console.log("item",item)
+
   const selectedTabStyle = {
     borderBottomWidth: 2,
     borderColor: '#fff',
@@ -45,7 +48,6 @@ const BookCourt = ({ navigation, route }) => {
   };
 
   const SendEmailWeekly = (emailData) => {
-    console.log("emailData", emailData)
     const to = user.email;
     const subject = "Saif Registration";
     const fromTime = emailData.assign_time;
@@ -75,7 +77,7 @@ const BookCourt = ({ navigation, route }) => {
     }
   };
 
-  const Booking = (selectedDates, hall) => {
+  const Booking = (selectedDates, hall, price) => {
     // Check the selectedDates, selectedTime, selectedEndTime is not null
     if (!selectedDates || !selectedTime || !selectedEndTime) {
       alert('Please select a date and time before booking.');
@@ -119,7 +121,7 @@ const BookCourt = ({ navigation, route }) => {
           hall: hall,
           contact_id: user.contact_id,
           total_hour: formattedResult,
-          total_hour_per_rate: multipliedTimeDifference,
+          total_hour_per_rate: price,
         };
 
         api
@@ -151,7 +153,7 @@ const BookCourt = ({ navigation, route }) => {
         hall: hall,
         contact_id: user.contact_id,
         total_hour: formattedResult,
-        total_hour_per_rate: multipliedTimeDifference,
+        total_hour_per_rate: price,
       };
 
       api
@@ -404,7 +406,7 @@ const BookCourt = ({ navigation, route }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <EHeader title={item.title} />
+      <EHeader title={item.key_text} />
 
       <View
         style={{
@@ -435,13 +437,13 @@ const BookCourt = ({ navigation, route }) => {
 
       {layout === 'daily' && (
         <View style={{ padding: 20 }}>
-          <EButton title="Book Daily Court" onPress={() => Booking(selected, item.title)} />
+          <EButton title="Book Daily Court" onPress={() => Booking(selected, item.key_text, item.value)} />
         </View>
       )}
 
       {layout === 'Weekly' && (
         <View style={{ padding: 20 }}>
-          <EButton title="Book Weekly Court" onPress={() => Booking(getSelectedDates(), item.title)} />
+          <EButton title="Book Weekly Court" onPress={() => Booking(getSelectedDates(), item.key_text, item.value)} />
         </View>
       )}
 
