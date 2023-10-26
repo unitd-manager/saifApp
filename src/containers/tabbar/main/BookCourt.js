@@ -53,10 +53,12 @@ const BookCourt = ({ navigation, route }) => {
     const fromTime = emailData.assign_time;
     const toTime = emailData.to_assign_time;
     const dateFromBooking = emailData.booking_date;
-    // const dateToBooking =emailData.selectedEndDate;
+    const dateToBooking =emailData.selectedEndDate;
     const hall = emailData.hall;
+    console.log("hall", hall)
+
     api
-      .post('/commonApi/sendUseremailBooking', { to, subject, fromTime, toTime, dateFromBooking, hall })
+      .post('/commonApi/sendUseremailBooking', { to, subject, fromTime, toTime, dateFromBooking,dateToBooking, hall })
       .then(response => {
         if (response.status === 200) {
           alert('Email sent successfully');
@@ -133,7 +135,7 @@ const BookCourt = ({ navigation, route }) => {
               setSelectedTime('')
               setSelectedEndTime('')
               SendEmailWeekly(bookingData)
-              navigation.navigate('HomeTab', { insertedData: bookingData });
+              // navigation.navigate('HomeTab', { insertedData: bookingData });
             } else {
               console.error('Error in booking for date:', date);
             }
@@ -165,7 +167,7 @@ const BookCourt = ({ navigation, route }) => {
             setSelectedTime('')
             setSelectedEndTime('')
             SendEmailWeekly(bookingData)
-            navigation.navigate('HomeTab', { insertedData: bookingData });
+            // navigation.navigate('HomeTab', { insertedData: bookingData });
           } else {
             alert('Error');
           }
