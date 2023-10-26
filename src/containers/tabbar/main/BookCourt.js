@@ -45,11 +45,12 @@ const BookCourt = ({ navigation, route }) => {
   };
 
   const SendEmailWeekly = (emailData) => {  
+
     const to = user.email;
     const subject = "Saif Registration";
-    const hall = emailData[0].hall;
   
     if (Array.isArray(emailData) && emailData.length > 0) {
+      const hall = emailData[0].hall;
       const fromTime = emailData[0].assign_time;
       const toTime = emailData[0].to_assign_time;
       const dateFromBooking = emailData[0].booking_date;
@@ -74,6 +75,7 @@ const BookCourt = ({ navigation, route }) => {
         });
     } else {
       // Handle the case of a single object
+      const hall = emailData.hall;
       const fromTime = emailData.assign_time;
       const toTime = emailData.to_assign_time;
       const dateFromBooking = emailData.booking_date;
@@ -88,7 +90,7 @@ const BookCourt = ({ navigation, route }) => {
           toTime,
           dateFromBooking,
           dateToBooking,
-          hall,
+          // hall,
         })
         .then(response => {
           if (response.status === 200) {
@@ -109,6 +111,8 @@ const BookCourt = ({ navigation, route }) => {
   };
 
   const Booking = (selectedDates, hall, price) => {
+
+    console.log(selectedDates, hall, price)
     // Check the selectedDates, selectedTime, selectedEndTime is not null
     if (!selectedDates || !selectedTime || !selectedEndTime) {
       alert('Please select a date and time before booking.');
@@ -194,17 +198,17 @@ const BookCourt = ({ navigation, route }) => {
         .then(response => {
           if (response.status === 200) {
             alert('Thank You for booking court');
+            SendEmailWeekly(bookingData)
             setSelected('');
             setSelectedTime('')
             setSelectedEndTime('')
-            SendEmailWeekly(bookingData)
-            // navigation.navigate('HomeTab', { insertedData: bookingData });
+            navigation.navigate('HomeTab', { insertedData: bookingData });
           } else {
             alert('Error');
           }
         })
         .catch(error => {
-          console.error('Error in booking for date:', selectedDates[0], error);
+          console.error('Error in booking for date:', selectedDates, error);
         });
     }
   };
