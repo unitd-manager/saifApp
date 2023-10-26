@@ -25,9 +25,6 @@ const BookCourt = ({ navigation, route }) => {
   const colors = useSelector(state => state.theme.theme);
   const item = route.params.item;
 
-
-  console.log("item",item)
-
   const selectedTabStyle = {
     borderBottomWidth: 2,
     borderColor: '#fff',
@@ -47,29 +44,61 @@ const BookCourt = ({ navigation, route }) => {
     }
   };
 
-  const SendEmailWeekly = (emailData) => {
+  const SendEmailWeekly = (emailData) => {  
     const to = user.email;
     const subject = "Saif Registration";
-    const fromTime = emailData.assign_time;
-    const toTime = emailData.to_assign_time;
-    const dateFromBooking = emailData.booking_date;
-    const dateToBooking =emailData.selectedEndDate;
-    const hall = emailData.hall;
-    console.log("hall", hall)
+    const hall = emailData[0].hall;
+  
+    if (Array.isArray(emailData) && emailData.length > 0) {
+      const fromTime = emailData[0].assign_time;
+      const toTime = emailData[0].to_assign_time;
+      const dateFromBooking = emailData[0].booking_date;
+      const dateToBooking = emailData[emailData.length - 1].booking_date;
 
-    api
-      .post('/commonApi/sendUseremailBooking', { to, subject, fromTime, toTime, dateFromBooking,dateToBooking, hall })
-      .then(response => {
-        if (response.status === 200) {
-          alert('Email sent successfully');
-          // setTimeout(() => {
-          //    navigation.navigate(StackNav.Login)
-          //   }, 500);
-        } else {
-          console.error('Error');
-        }
-      })
-  }
+      api
+        .post('/commonApi/sendUseremailBooking', {
+          to,
+          subject,
+          fromTime,
+          toTime,
+          dateFromBooking,
+          dateToBooking,
+          hall,
+        })
+        .then(response => {
+          if (response.status === 200) {
+            alert('Email sent successfully');
+          } else {
+            console.error('Error');
+          }
+        });
+    } else {
+      // Handle the case of a single object
+      const fromTime = emailData.assign_time;
+      const toTime = emailData.to_assign_time;
+      const dateFromBooking = emailData.booking_date;
+      const dateToBooking = emailData.selectedEndDate;
+  
+      // Now, you can send this data in the email
+      api
+        .post('/commonApi/sendUseremailBooking', {
+          to,
+          subject,
+          fromTime,
+          toTime,
+          dateFromBooking,
+          dateToBooking,
+          hall,
+        })
+        .then(response => {
+          if (response.status === 200) {
+            alert('Email sent successfully');
+          } else {
+            console.error('Error');
+          }
+        });
+    }
+  };
 
   const handleEndTimeChange = (endTime) => {
     if (selectedTime && endTime <= selectedTime) {
@@ -101,7 +130,6 @@ const BookCourt = ({ navigation, route }) => {
 
     const startTime = parseTime(selectedTime);
     const endTime = parseTime(selectedEndTime);
-    const rate = 30;
 
     const timeDifferenceMs = endTime - startTime;
 
@@ -110,9 +138,11 @@ const BookCourt = ({ navigation, route }) => {
 
     const formattedResult = `${hours} hours ${minutes} min`;
 
-    const multipliedTimeDifference = (hours + minutes / 60) * rate;
+    const multipliedTimeDifference = (hours + minutes / 60) * price;
 
     // End calculate the per hr rate
+
+    const bookingDates = []; 
 
     if (Array.isArray(selectedDates) && selectedDates.length > 1) {
       selectedDates.forEach(date => {
@@ -123,8 +153,10 @@ const BookCourt = ({ navigation, route }) => {
           hall: hall,
           contact_id: user.contact_id,
           total_hour: formattedResult,
-          total_hour_per_rate: price,
+          total_hour_per_rate: multipliedTimeDifference,
         };
+
+        bookingDates.push(bookingData);
 
         api
           .post('/booking/insertBooking', bookingData)
@@ -134,7 +166,6 @@ const BookCourt = ({ navigation, route }) => {
               setSelectedEndDate('')
               setSelectedTime('')
               setSelectedEndTime('')
-              SendEmailWeekly(bookingData)
               // navigation.navigate('HomeTab', { insertedData: bookingData });
             } else {
               console.error('Error in booking for date:', date);
@@ -144,7 +175,7 @@ const BookCourt = ({ navigation, route }) => {
             console.error('Error in booking for date:', date, error);
           });
       });
-
+      SendEmailWeekly(bookingDates);
       alert('Thank You for booking court');
     } else if (selectedDates) {
 
@@ -155,7 +186,7 @@ const BookCourt = ({ navigation, route }) => {
         hall: hall,
         contact_id: user.contact_id,
         total_hour: formattedResult,
-        total_hour_per_rate: price,
+        total_hour_per_rate: multipliedTimeDifference,
       };
 
       api
