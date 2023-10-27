@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView,Alert } from 'react-native';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import EHeader from '../../../components/common/EHeader';
@@ -68,7 +68,7 @@ const BookCourt = ({ navigation, route }) => {
         })
         .then(response => {
           if (response.status === 200) {
-            alert('Email sent successfully');
+            Alert.alert('Booking Email Sent successfully');
           } else {
             console.error('Error');
           }
@@ -90,11 +90,11 @@ const BookCourt = ({ navigation, route }) => {
           toTime,
           dateFromBooking,
           dateToBooking,
-          // hall,
+          hall,
         })
         .then(response => {
           if (response.status === 200) {
-            alert('Email sent successfully');
+            Alert.alert('Booking Email Sent successfully');
           } else {
             console.error('Error');
           }
@@ -103,19 +103,43 @@ const BookCourt = ({ navigation, route }) => {
   };
 
   const handleEndTimeChange = (endTime) => {
-    if (selectedTime && endTime <= selectedTime) {
-      alert("End time must be after the start time.");
+    // Convert time strings to timestamps
+    const selectedTimeTimestamp = getTimeStamp(selectedTime);
+    const endTimeTimestamp = getTimeStamp(endTime);
+  
+    if (selectedTimeTimestamp && endTimeTimestamp <= selectedTimeTimestamp) {
+      Alert.alert("End time must be after the start time.");
+      return;
     } else {
       setSelectedEndTime(endTime);
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        left: 0,
+        behavior: "smooth",
+      });
     }
   };
-
+  
+  // Function to convert time strings to timestamps
+  function getTimeStamp(timeStr) {
+    if (!timeStr) {
+      return null;
+    }
+  
+    // Parse the time string
+    const [hours, minutes, period] = timeStr.split(/:| /);
+    const isPM = period.toLowerCase() === "pm";
+    const hour = parseInt(hours) % 12;
+    const minute = parseInt(minutes);
+  
+    // Calculate the timestamp
+    return isPM ? (hour + 12) * 60 + minute : hour * 60 + minute;
+  }
   const Booking = (selectedDates, hall, price) => {
 
-    console.log(selectedDates, hall, price)
     // Check the selectedDates, selectedTime, selectedEndTime is not null
     if (!selectedDates || !selectedTime || !selectedEndTime) {
-      alert('Please select a date and time before booking.');
+      Alert.alert('Please select a date and time before booking.');
       return;
     }
 
@@ -170,7 +194,7 @@ const BookCourt = ({ navigation, route }) => {
               setSelectedEndDate('')
               setSelectedTime('')
               setSelectedEndTime('')
-              // navigation.navigate('HomeTab', { insertedData: bookingData });
+              navigation.navigate('HomeTab', { insertedData: bookingData });
             } else {
               console.error('Error in booking for date:', date);
             }
@@ -180,7 +204,7 @@ const BookCourt = ({ navigation, route }) => {
           });
       });
       SendEmailWeekly(bookingDates);
-      alert('Thank You for booking court');
+      Alert.alert('Thank You for booking court');
     } else if (selectedDates) {
 
       const bookingData = {
@@ -197,14 +221,14 @@ const BookCourt = ({ navigation, route }) => {
         .post('/booking/insertBooking', bookingData)
         .then(response => {
           if (response.status === 200) {
-            alert('Thank You for booking court');
+            Alert.alert('Thank You for booking court');
             SendEmailWeekly(bookingData)
             setSelected('');
             setSelectedTime('')
             setSelectedEndTime('')
             navigation.navigate('HomeTab', { insertedData: bookingData });
           } else {
-            alert('Error');
+            Alert.alert('Error');
           }
         })
         .catch(error => {
@@ -251,7 +275,7 @@ const BookCourt = ({ navigation, route }) => {
                   const selectedDate = new Date(day.dateString);
                   const today = new Date();
                   if (selectedDate < today) {
-                    alert('Please select a date in the future.');
+                    Alert.alert('Please select a date in the future.');
                   } else {
                     setSelected(day.dateString);
                   }
@@ -281,7 +305,7 @@ const BookCourt = ({ navigation, route }) => {
                 )}
               </View>
               {selected && (
-                <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selected}</Text>
+                <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selected.split('-').reverse().join('-')}</Text>
               )}
               {selectedTime && (
                 <Text style={Attendancestyles.selectedDateText}>Selected Start Time: {selectedTime}</Text>
@@ -339,10 +363,10 @@ const BookCourt = ({ navigation, route }) => {
             </View>
 
             {selectedStartDate && (
-              <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selectedStartDate}</Text>
+              <Text style={Attendancestyles.selectedDateText}>Selected Start Date: {selectedStartDate.split('-').reverse().join('-')} </Text>
             )}
             {selectedEndDate && (
-              <Text style={Attendancestyles.selectedDateText}>Selected End Date: {selectedEndDate}</Text>
+              <Text style={Attendancestyles.selectedDateText}>Selected End Date: {selectedEndDate.split('-').reverse().join('-')} </Text>
             )}
             {selectedTime && (
               <Text style={Attendancestyles.selectedDateText}>Selected Start Time: {selectedTime}</Text>
@@ -362,7 +386,7 @@ const BookCourt = ({ navigation, route }) => {
     const today = new Date();
 
     if (selectedDate < today) {
-      alert('You can\'t select a past date');
+      Alert.alert('You can\'t select a past date');
     } else if (selectedStartDate === null || (selectedStartDate && selectedEndDate)) {
       setSelectedStartDate(date);
       setSelectedEndDate(null);
@@ -376,14 +400,14 @@ const BookCourt = ({ navigation, route }) => {
         const dayDifference = Math.abs((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
         if (dayDifference < 2) {
-          alert('Please select a minimum of 2 days.');
+          Alert.alert('Please select a minimum of 2 days.');
         } else if (dayDifference <= 7) {
           setSelectedEndDate(newSelectedEndDate);
         } else {
-          alert('You can only select a maximum of 7 days.');
+          Alert.alert('You can only select a maximum of 7 days.');
         }
       } else {
-        alert("You can't select an end date earlier than the start date.");
+        Alert. alert("You can't select an end date earlier than the start date.");
       }
     }
   };
@@ -558,6 +582,7 @@ const Attendancestyles = StyleSheet.create({
   selectedDateText: {
     marginTop: 10,
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color:'#36454F'
   }
 });
