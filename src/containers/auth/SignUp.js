@@ -122,8 +122,6 @@ const SignUp = () => {
             .post('/api/register', registerData)
             .then(response => {
                 if (response.status === 200) {
-                    alert('Thank You for registering');
-
                     setTimeout(() => {
                         SendEmail();
                       }, 500);
@@ -141,15 +139,13 @@ const SignUp = () => {
     };
     
     const SendEmail =()=>{
-        alert("Send Email")
-        console.log("email", email)
         const to = email;
         const subject = "Saif Registration";
           api
         .post('/commonApi/sendUseremail', {to,subject})
         .then(response => {
             if (response.status === 200) {
-                alert('Email sent successfully');
+                Alert.alert('You have successfully registered');
                 setTimeout(() => {
                    navigation.navigate(StackNav.Login)
                   }, 500);

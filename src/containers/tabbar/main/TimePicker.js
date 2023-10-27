@@ -63,8 +63,9 @@ const formatTime = (time) => {
           value={date}
           mode={mode}
           accentColor="#13458cbd"
-          is24Hour={true}
+          is24Hour={false}
           onChange={onChange}
+          display="spinner"
         />
       )}
     </SafeAreaView>

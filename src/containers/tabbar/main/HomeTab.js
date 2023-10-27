@@ -147,7 +147,7 @@ export default function HomeTab({ route }) {
                       <Text style={localStyles.power}>{item.total_hour}</Text>
                     </View>
                     <View style={localStyles.containerRow}>
-                      <Text style={localStyles.power}>{item.booking_date}</Text>
+                      <Text style={localStyles.power}>{item.booking_date.split('-').reverse().join('-')}</Text>
                       <Text style={localStyles.power}>{item.assign_time}</Text>
                       <Text style={localStyles.power}>{item.to_assign_time}</Text>
                     </View>
