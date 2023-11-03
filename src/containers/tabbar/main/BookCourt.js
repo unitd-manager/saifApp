@@ -162,7 +162,8 @@ const BookCourt = ({ navigation, route }) => {
         hour += 12;
       }
       const date = new Date();
-      date.setHours(hour, parseInt(minutes), 0, 0);
+      // date.setHours(hour, parseInt(minutes), 0, 0);
+      date.setHours(hour, 0, 0, 0);
       return date;
     };
 
@@ -174,7 +175,15 @@ const BookCourt = ({ navigation, route }) => {
     const hours = Math.floor(timeDifferenceMs / (1000 * 60 * 60));
     const minutes = Math.floor((timeDifferenceMs % (1000 * 60 * 60)) / (1000 * 60));
 
-    const formattedResult = `${hours} hours ${minutes} min`;
+
+    if (hours !== 1 || minutes !== 0) {
+      Alert.alert('Booking duration must be exactly 1 hour. You cant book more than 1 hour.');
+      return;
+    }
+  
+    const formattedResult = '1 hour';
+
+    // const formattedResult = `${hours} hours ${minutes} min`;
 
     const multipliedTimeDifference = (hours + minutes / 60) * price;
 
