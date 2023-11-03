@@ -135,6 +135,16 @@ const BookCourt = ({ navigation, route }) => {
     // Calculate the timestamp
     return isPM ? (hour + 12) * 60 + minute : hour * 60 + minute;
   }
+
+  const checkExistingBooking = (date, startTime, endTime) => {
+    const existingBooking = api.get(`/booking/checkBooking?date=${date}&startTime=${startTime}&endTime=${endTime}`);
+    if (existingBooking) {
+      return existingBooking;
+    } else {
+      return null;
+    }
+  };
+
   const Booking = (selectedDates, hall, price) => {
 
     // Check the selectedDates, selectedTime, selectedEndTime is not null
@@ -171,9 +181,17 @@ const BookCourt = ({ navigation, route }) => {
     // End calculate the per hr rate
 
     const bookingDates = []; 
-
+    let existingBookingFound = false;
     if (Array.isArray(selectedDates) && selectedDates.length > 1) {
       selectedDates.forEach(date => {
+
+        const existingBooking = checkExistingBooking(date, selectedTime, selectedEndTime);
+      if (existingBooking) {
+        Alert.alert('Booking already exists for date and time:', date);
+        existingBookingFound = true;
+        return;
+      }
+
         const bookingData = {
           assign_time: selectedTime,
           to_assign_time: selectedEndTime,
@@ -203,9 +221,20 @@ const BookCourt = ({ navigation, route }) => {
             console.error('Error in booking for date:', date, error);
           });
       });
-      SendEmailWeekly(bookingDates);
-      Alert.alert('Thank You for booking court');
+
+      if (!existingBookingFound) {
+        SendEmailWeekly(bookingDates);
+        Alert.alert('Thank You for booking court');
+      }
     } else if (selectedDates) {
+
+      const existingBooking = checkExistingBooking(selectedDates, selectedTime, selectedEndTime);
+    if (existingBooking) {
+      Alert.alert('Booking already exists for date and time:', 
+      `Date: ${selectedDates.split('-').reverse().join('-')} \nTime: ${selectedTime} - ${selectedEndTime}`
+    );      
+    return;
+    }
 
       const bookingData = {
         assign_time: selectedTime,
