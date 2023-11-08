@@ -232,14 +232,15 @@ if (Array.isArray(selectedDates) && selectedDates.length > 1) {
   Promise.all(promises)
   .then(() => {
     if (conflicts.length > 0) {
-      const conflictsMessage = 'Booking conflict detected for the following dates: ' + conflicts.join(', ');
+      const conflictsMessage = 'Booking already exists for this time slot. Plase select other time slot.' ;
       Alert.alert('Booking conflict', conflictsMessage);
     } else {
-        setSelectedStartDate('')
-        setSelectedEndDate('')
-        setSelectedTime('')
-        setSelectedEndTime('')
-        Alert.alert('Thank You for booking court', bookingDates);
+      const bookedDates = bookingDates.map((booking) => booking.booking_date).join(', ');
+      Alert.alert('Thank You for booking court', 'Booked for dates: ' + bookedDates);
+      setSelectedStartDate('');
+      setSelectedEndDate('');
+      setSelectedTime('');
+      setSelectedEndTime('');
       SendEmailWeekly(bookingDates);
     }
   });
