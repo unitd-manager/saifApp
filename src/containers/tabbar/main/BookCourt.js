@@ -189,12 +189,10 @@ if (Array.isArray(selectedDates) && selectedDates.length > 1) {
     try {
       const response = await api.post('/booking/insertBooking', bookingData);
       if (response.status === 200) {
-          setSelectedStartDate('')
-          setSelectedEndDate('')
-          setSelectedTime('')
-          setSelectedEndTime('')
-          navigation.navigate('HomeTab', { insertedData: bookingData });
         console.log('Booking inserted successfully');
+        setTimeout(() => {
+          navigation.navigate('HomeTab', { insertedData: bookingData });
+        }, 500);
       } else {
         console.error('Error in booking for date:', bookingData.booking_date);
       }
@@ -231,15 +229,35 @@ if (Array.isArray(selectedDates) && selectedDates.length > 1) {
   });
 
   // Wait for all API requests to complete
+  // Promise.all(promises)
+  //   .then(() => {
+  //     if (conflicts.length > 0) {
+  //       Alert.alert('Booking conflict', 'Booking conflict detected for the following dates: ' + conflicts.join(', '));
+  //     } else {
+  //       setSelectedStartDate('')
+  //       setSelectedEndDate('')
+  //       setSelectedTime('')
+  //       setSelectedEndTime('')
+  //       Alert.alert('Thank You for booking court', bookingDates);
+  //       SendEmailWeekly(bookingDates);
+  //     }
+  //   });
+
   Promise.all(promises)
-    .then(() => {
-      if (conflicts.length > 0) {
-        Alert.alert('Booking conflict', 'Booking conflict detected for the following dates: ' + conflicts.join(', '));
-      } else {
+  .then(() => {
+    if (conflicts.length > 0) {
+      const conflictsMessage = 'Booking conflict detected for the following dates: ' + conflicts.join(', ');
+      Alert.alert('Booking conflict', conflictsMessage);
+    } else {
+        setSelectedStartDate('')
+        setSelectedEndDate('')
+        setSelectedTime('')
+        setSelectedEndTime('')
         Alert.alert('Thank You for booking court', bookingDates);
-        SendEmailWeekly(bookingDates);
-      }
-    });
+      SendEmailWeekly(bookingDates);
+    }
+  });
+
 }
     else if (selectedDates) {
 
