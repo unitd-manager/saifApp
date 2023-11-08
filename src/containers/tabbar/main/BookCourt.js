@@ -229,20 +229,6 @@ if (Array.isArray(selectedDates) && selectedDates.length > 1) {
   });
 
   // Wait for all API requests to complete
-  // Promise.all(promises)
-  //   .then(() => {
-  //     if (conflicts.length > 0) {
-  //       Alert.alert('Booking conflict', 'Booking conflict detected for the following dates: ' + conflicts.join(', '));
-  //     } else {
-  //       setSelectedStartDate('')
-  //       setSelectedEndDate('')
-  //       setSelectedTime('')
-  //       setSelectedEndTime('')
-  //       Alert.alert('Thank You for booking court', bookingDates);
-  //       SendEmailWeekly(bookingDates);
-  //     }
-  //   });
-
   Promise.all(promises)
   .then(() => {
     if (conflicts.length > 0) {
