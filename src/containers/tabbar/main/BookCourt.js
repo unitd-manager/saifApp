@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView,Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import EHeader from '../../../components/common/EHeader';
@@ -44,11 +44,11 @@ const BookCourt = ({ navigation, route }) => {
     }
   };
 
-  const SendEmailWeekly = (emailData) => {  
+  const SendEmailWeekly = (emailData) => {
 
     const to = user.email;
     const subject = "Saif Registration";
-  
+
     if (Array.isArray(emailData) && emailData.length > 0) {
       const hall = emailData[0].hall;
       const fromTime = emailData[0].assign_time;
@@ -80,7 +80,7 @@ const BookCourt = ({ navigation, route }) => {
       const toTime = emailData.to_assign_time;
       const dateFromBooking = emailData.booking_date;
       const dateToBooking = emailData.selectedEndDate;
-  
+
       // Now, you can send this data in the email
       api
         .post('/commonApi/sendUseremailBooking', {
@@ -106,7 +106,7 @@ const BookCourt = ({ navigation, route }) => {
     // Convert time strings to timestamps
     const selectedTimeTimestamp = getTimeStamp(selectedTime);
     const endTimeTimestamp = getTimeStamp(endTime);
-  
+
     if (selectedTimeTimestamp && endTimeTimestamp <= selectedTimeTimestamp) {
       Alert.alert("End time must be after the start time.");
       return;
@@ -119,31 +119,22 @@ const BookCourt = ({ navigation, route }) => {
       });
     }
   };
-  
+
   // Function to convert time strings to timestamps
   function getTimeStamp(timeStr) {
     if (!timeStr) {
       return null;
     }
-  
+
     // Parse the time string
     const [hours, minutes, period] = timeStr.split(/:| /);
     const isPM = period.toLowerCase() === "pm";
     const hour = parseInt(hours) % 12;
     const minute = parseInt(minutes);
-  
+
     // Calculate the timestamp
     return isPM ? (hour + 12) * 60 + minute : hour * 60 + minute;
   }
-
-  const checkExistingBooking = (date, startTime, endTime) => {
-    const existingBooking = api.get(`/booking/checkBooking?date=${date}&startTime=${startTime}&endTime=${endTime}`);
-    if (existingBooking) {
-      return existingBooking;
-    } else {
-      return null;
-    }
-  };
 
   const Booking = (selectedDates, hall, price) => {
 
@@ -177,10 +168,10 @@ const BookCourt = ({ navigation, route }) => {
 
 
     if (hours !== 1 || minutes !== 0) {
-      Alert.alert('Booking duration must be exactly 1 hour. You cant book more than 1 hour.');
+      Alert.alert('Booking duration must be exactly 1 hour. You can\'t book more than 1 hour.');
       return;
     }
-  
+
     const formattedResult = '1 hour';
 
     // const formattedResult = `${hours} hours ${minutes} min`;
@@ -189,61 +180,68 @@ const BookCourt = ({ navigation, route }) => {
 
     // End calculate the per hr rate
 
-    const bookingDates = []; 
-    let existingBookingFound = false;
-    if (Array.isArray(selectedDates) && selectedDates.length > 1) {
-      selectedDates.forEach(date => {
 
-        const existingBooking = checkExistingBooking(date, selectedTime, selectedEndTime);
-      if (existingBooking) {
-        Alert.alert('Booking already exists for date and time:', date);
-        existingBookingFound = true;
-        return;
+const bookingDates = [];
+const conflicts = [];
+
+if (Array.isArray(selectedDates) && selectedDates.length > 1) {
+  const insertBooking = async (bookingData) => {
+    try {
+      const response = await api.post('/booking/insertBooking', bookingData);
+      if (response.status === 200) {
+          setSelectedStartDate('')
+          setSelectedEndDate('')
+          setSelectedTime('')
+          setSelectedEndTime('')
+          navigation.navigate('HomeTab', { insertedData: bookingData });
+        console.log('Booking inserted successfully');
+      } else {
+        console.error('Error in booking for date:', bookingData.booking_date);
       }
-
-        const bookingData = {
-          assign_time: selectedTime,
-          to_assign_time: selectedEndTime,
-          booking_date: date,
-          hall: hall,
-          contact_id: user.contact_id,
-          total_hour: formattedResult,
-          total_hour_per_rate: multipliedTimeDifference,
-        };
-
-        bookingDates.push(bookingData);
-
-        api
-          .post('/booking/insertBooking', bookingData)
-          .then(response => {
-            if (response.status === 200) {
-              setSelectedStartDate('')
-              setSelectedEndDate('')
-              setSelectedTime('')
-              setSelectedEndTime('')
-              navigation.navigate('HomeTab', { insertedData: bookingData });
-            } else {
-              console.error('Error in booking for date:', date);
-            }
-          })
-          .catch(error => {
-            console.error('Error in booking for date:', date, error);
-          });
-      });
-
-      if (!existingBookingFound) {
-        SendEmailWeekly(bookingDates);
-        Alert.alert('Thank You for booking court');
-      }
-    } else if (selectedDates) {
-
-      const existingBooking = checkExistingBooking(selectedDates, selectedTime, selectedEndTime);
-    if (existingBooking) {
-      Alert.alert('Booking already exists for date and time:', 
-      `Date: ${selectedDates.split('-').reverse().join('-')} \nTime: ${selectedTime} - ${selectedEndTime}`
-    );      
-    return;
+    } catch (error) {
+      console.error('Error in booking for date:', bookingData.booking_date, error);
     }
+  };
+
+  const promises = selectedDates.map(async date => {
+    const bookingData = {
+      assign_time: selectedTime,
+      to_assign_time: selectedEndTime,
+      booking_date: date,
+      hall: hall,
+      contact_id: user.contact_id,
+      total_hour: formattedResult,
+      total_hour_per_rate: multipliedTimeDifference,
+    };
+
+    bookingDates.push(bookingData);
+
+    return api
+      .post('/booking/checkBookingExistence', bookingData)
+      .then((response) => {
+        if (response.data.msg === 'Booking already exists for this time slot and date.') {
+          conflicts.push(date);
+        } else {
+          return insertBooking(bookingData);
+        }
+      })
+      .catch((error) => {
+        console.error("AxiosError:", error);
+      });
+  });
+
+  // Wait for all API requests to complete
+  Promise.all(promises)
+    .then(() => {
+      if (conflicts.length > 0) {
+        Alert.alert('Booking conflict', 'Booking conflict detected for the following dates: ' + conflicts.join(', '));
+      } else {
+        Alert.alert('Thank You for booking court', bookingDates);
+        SendEmailWeekly(bookingDates);
+      }
+    });
+}
+    else if (selectedDates) {
 
       const bookingData = {
         assign_time: selectedTime,
@@ -255,22 +253,33 @@ const BookCourt = ({ navigation, route }) => {
         total_hour_per_rate: multipliedTimeDifference,
       };
 
-      api
-        .post('/booking/insertBooking', bookingData)
-        .then(response => {
-          if (response.status === 200) {
-            Alert.alert('Thank You for booking court');
-            SendEmailWeekly(bookingData)
-            setSelected('');
-            setSelectedTime('')
-            setSelectedEndTime('')
-            navigation.navigate('HomeTab', { insertedData: bookingData });
+      api.post('/booking/checkBookingExistence', bookingData)
+        .then((response) => {
+          if (response.data.msg === 'Booking already exists for this time slot and date.') {
+            Alert.alert('Booking conflict', response.data.msg);
           } else {
-            Alert.alert('Error');
+            api
+              .post('/booking/insertBooking', bookingData)
+              .then(response => {
+                if (response.status === 200) {
+                  Alert.alert('Thank You for booking court');
+                  SendEmailWeekly(bookingData)
+                  setSelected('');
+                  setSelectedTime('')
+                  setSelectedEndTime('')
+                  navigation.navigate('HomeTab', { insertedData: bookingData });
+                } else {
+                  Alert.alert('Error');
+                }
+              })
+              .catch(error => {
+                console.error('Error in booking for date:', selectedDates, error);
+              });
+
           }
         })
-        .catch(error => {
-          console.error('Error in booking for date:', selectedDates, error);
+        .catch((error) => {
+          console.error("AxiosError:", error);
         });
     }
   };
@@ -445,7 +454,7 @@ const BookCourt = ({ navigation, route }) => {
           Alert.alert('You can only select a maximum of 7 days.');
         }
       } else {
-        Alert. alert("You can't select an end date earlier than the start date.");
+        Alert.alert("You can't select an end date earlier than the start date.");
       }
     }
   };
@@ -621,6 +630,6 @@ const Attendancestyles = StyleSheet.create({
     marginTop: 10,
     fontSize: 15,
     fontWeight: 'bold',
-    color:'#36454F'
+    color: '#36454F'
   }
 });
