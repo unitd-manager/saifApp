@@ -28,6 +28,7 @@ const formatTime = (time) => {
 
     if (currentDate >= minTime && currentDate <= maxTime) {
       setShow(false);
+      currentDate.setMinutes(0);
       setDate(currentDate);
       setSelectedTime(formatTime(currentDate));
       setSelectedEndTime(formatTime(currentDate))

@@ -10,6 +10,7 @@ import SmallCardComponent from '../../../components/homeComponent/SmallCardCompo
 import EText from '../../../components/common/EText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deviceWidth, moderateScale } from '../../../common/constants';
+import moment from 'moment';
 
 export default function HomeTab({ route }) {
 
@@ -26,6 +27,12 @@ export default function HomeTab({ route }) {
   const contactId = user ? user.contact_id : null;
 
   const [DATA, setData] = useState([])
+
+  const isDatePassed = (date) => {
+    return moment(date, 'YYYY-DD-MM').isBefore(moment(), 'day');
+  };
+  // Filter the data to exclude items with past dates
+  // const filteredData = DATA.filter((item) => !isDatePassed(item.booking_date));
 
   const fetchBookingContact = (contactId) => {
     api
@@ -132,22 +139,27 @@ export default function HomeTab({ route }) {
                 ? require('../../../assets/images/court2.webp')
                 : require('../../../assets/images/tumb.jpg');
 
+            const backgroundColor = isDatePassed(item.booking_date) ? 'red' : item.color;
+
+
             return (
-              <View style={localStyles.item}>
+              <View style={{backgroundColor, width:'100%'}}>
+                <View style={[localStyles.item]}>
                 <Image
-                    style={[localStyles.circular, { backgroundColor: item.color }]}
-                    source={imageSource}
-                  />
-                <View style={localStyles.itemLeft}>
-                    <View style={localStyles.containerRow}>
-                      <Text style={localStyles.heading}>{item.hall}</Text>
-                      <Text style={localStyles.power}>{item.total_hour}</Text>
-                    </View>
-                    <View style={localStyles.containerRow}>
-                      <Text style={localStyles.power}>{item.booking_date.split('-').reverse().join('-')}</Text>
-                      <Text style={localStyles.power}>{item.assign_time}</Text>
-                      <Text style={localStyles.power}>{item.to_assign_time}</Text>
-                    </View>
+                      style={[localStyles.circular, { backgroundColor: item.color }]}
+                      source={imageSource}
+                    />
+                  <View style={localStyles.itemLeft}>
+                      <View style={localStyles.containerRow}>
+                        <Text style={localStyles.heading}>{item.hall}</Text>
+                        <Text style={localStyles.power}>{item.payment_status}</Text>
+                      </View>
+                      <View style={localStyles.containerRow}>
+                        <Text style={localStyles.power}>{item.booking_date.split('-').reverse().join('-')}</Text>
+                        <Text style={localStyles.power}>{item.assign_time}</Text>
+                        <Text style={localStyles.power}>{item.to_assign_time}</Text>
+                      </View>
+                  </View>
                 </View>
               </View>
             );
@@ -172,7 +184,7 @@ const RenderHeaderItem = React.memo(() => {
     <View>
       <View style={localStyles.card}>
         <View style={localStyles.left}>
-          <EText type="m16" numberOfLines={1} color={'#fff'}> Tournament </EText>
+          <EText type="m16" numberOfLines={1} color={'#fff'}>Tournament </EText>
           <Text style={{ color: '#fff' }}>Participate in a 2-hour tournament featuring intense rallying and competitive points.</Text>
         </View>
         <Tournament width={moderateScale(70)} height={moderateScale(70)} />
@@ -228,7 +240,7 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 75,
-    width: '95%',
+    width: '100%',
     alignSelf: 'center',
     borderBottomColor: '#dedede',
     borderBottomWidth: 0.5
