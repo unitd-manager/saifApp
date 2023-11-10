@@ -32,7 +32,7 @@ export default function HomeTab({ route }) {
     return moment(date, 'YYYY-DD-MM').isBefore(moment(), 'day');
   };
   // Filter the data to exclude items with past dates
-  const filteredData = DATA.filter((item) => !isDatePassed(item.booking_date));
+  // const filteredData = DATA.filter((item) => !isDatePassed(item.booking_date));
 
   const fetchBookingContact = (contactId) => {
     api
@@ -129,9 +129,9 @@ export default function HomeTab({ route }) {
       <View style={[localStyles.loginBg, { flex: .7 }]}>
 
         {contactId ? (
-          filteredData.length > 0 ? (
+          DATA.length > 0 ? (
             <FlatList
-          data={filteredData}
+          data={DATA}
           renderItem={({ item, index }) => {
             const imageSource = item.hall === 'Court 1'
               ? require('../../../assets/images/court1.jpg')
@@ -143,21 +143,23 @@ export default function HomeTab({ route }) {
 
 
             return (
-              <View style={[localStyles.item, { backgroundColor }]}>
-              <Image
-                    style={[localStyles.circular, { backgroundColor: item.color }]}
-                    source={imageSource}
-                  />
-                <View style={localStyles.itemLeft}>
-                    <View style={localStyles.containerRow}>
-                      <Text style={localStyles.heading}>{item.hall}</Text>
-                      <Text style={localStyles.power}>{item.total_hour}</Text>
-                    </View>
-                    <View style={localStyles.containerRow}>
-                      <Text style={localStyles.power}>{item.booking_date.split('-').reverse().join('-')}</Text>
-                      <Text style={localStyles.power}>{item.assign_time}</Text>
-                      <Text style={localStyles.power}>{item.to_assign_time}</Text>
-                    </View>
+              <View style={{backgroundColor, width:'100%'}}>
+                <View style={[localStyles.item]}>
+                <Image
+                      style={[localStyles.circular, { backgroundColor: item.color }]}
+                      source={imageSource}
+                    />
+                  <View style={localStyles.itemLeft}>
+                      <View style={localStyles.containerRow}>
+                        <Text style={localStyles.heading}>{item.hall}</Text>
+                        <Text style={localStyles.power}>{item.payment_status}</Text>
+                      </View>
+                      <View style={localStyles.containerRow}>
+                        <Text style={localStyles.power}>{item.booking_date.split('-').reverse().join('-')}</Text>
+                        <Text style={localStyles.power}>{item.assign_time}</Text>
+                        <Text style={localStyles.power}>{item.to_assign_time}</Text>
+                      </View>
+                  </View>
                 </View>
               </View>
             );
@@ -182,7 +184,7 @@ const RenderHeaderItem = React.memo(() => {
     <View>
       <View style={localStyles.card}>
         <View style={localStyles.left}>
-          <EText type="m16" numberOfLines={1} color={'#fff'}> Tournament </EText>
+          <EText type="m16" numberOfLines={1} color={'#fff'}>Tournament </EText>
           <Text style={{ color: '#fff' }}>Participate in a 2-hour tournament featuring intense rallying and competitive points.</Text>
         </View>
         <Tournament width={moderateScale(70)} height={moderateScale(70)} />
@@ -238,7 +240,7 @@ const localStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: 75,
-    width: '95%',
+    width: '100%',
     alignSelf: 'center',
     borderBottomColor: '#dedede',
     borderBottomWidth: 0.5

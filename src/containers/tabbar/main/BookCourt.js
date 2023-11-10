@@ -194,8 +194,10 @@ const BookCourt = ({ navigation, route }) => {
 
     const bookingDates = [];
     const conflicts = [];
+    if (layout === 'Weekly') {
 
     if (Array.isArray(selectedDates) && selectedDates.length > 1) {
+
       const insertBooking = async (bookingData) => {
         try {
           const response = await api.post('/booking/insertBooking', bookingData);
@@ -257,6 +259,12 @@ const BookCourt = ({ navigation, route }) => {
         });
 
     }
+    else {
+      // Display an alert if there's only one date selected
+      Alert.alert('Please select multiple dates for weekly booking.');
+      return;
+    }
+  }
     else if (selectedDates) {
 
       const bookingData = {
@@ -268,9 +276,6 @@ const BookCourt = ({ navigation, route }) => {
         total_hour: formattedResult,
         total_hour_per_rate: multipliedTimeDifference,
       };
-
-
-      console.log("bookingData Daily", bookingData)
 
       api.post('/booking/checkBookingExistence', bookingData)
         .then((response) => {
