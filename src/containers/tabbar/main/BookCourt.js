@@ -154,7 +154,7 @@ const BookCourt = ({ navigation, route }) => {
       }
       const date = new Date();
       // date.setHours(hour, parseInt(minutes), 0, 0);
-      date.setHours(hour, 0, 0, 0);
+      date.setHours(hour, minutes, 0, 0);
       return date;
     };
 
@@ -163,14 +163,25 @@ const BookCourt = ({ navigation, route }) => {
 
     const timeDifferenceMs = endTime - startTime;
 
-    const hours = Math.floor(timeDifferenceMs / (1000 * 60 * 60));
-    const minutes = Math.floor((timeDifferenceMs % (1000 * 60 * 60)) / (1000 * 60));
+    // Calculate total minutes
+    const totalMinutes = Math.floor(timeDifferenceMs / (1000 * 60));
 
+    // Calculate hours and remaining minutes
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
 
-    if (hours !== 1 || minutes !== 0) {
-      Alert.alert('Booking duration must be exactly 1 hour. You can\'t book more than 1 hour.');
+    if (hours !== 1 || startTime.getMinutes() !== 0 || endTime.getMinutes() !== 0) {
+      // Check if minutes are not zero
+      if (startTime.getMinutes() !== 0 || endTime.getMinutes() !== 0) {
+        Alert.alert('Please select minutes as 00, not as 01, 02, etc..');
+        // Booking duration must be exactly 1 hour with 0 minutes. 
+      } else {
+        Alert.alert('You can\'t book more than 1 hour.');
+        // Booking duration must be exactly 1 hour. 
+      }
       return;
     }
+
 
     const formattedResult = '1 hour';
 
@@ -181,71 +192,71 @@ const BookCourt = ({ navigation, route }) => {
     // End calculate the per hr rate
 
 
-const bookingDates = [];
-const conflicts = [];
+    const bookingDates = [];
+    const conflicts = [];
 
-if (Array.isArray(selectedDates) && selectedDates.length > 1) {
-  const insertBooking = async (bookingData) => {
-    try {
-      const response = await api.post('/booking/insertBooking', bookingData);
-      if (response.status === 200) {
-        console.log('Booking inserted successfully');
-        setTimeout(() => {
-          navigation.navigate('HomeTab', { insertedData: bookingData });
-        }, 500);
-      } else {
-        console.error('Error in booking for date:', bookingData.booking_date);
-      }
-    } catch (error) {
-      console.error('Error in booking for date:', bookingData.booking_date, error);
-    }
-  };
-
-  const promises = selectedDates.map(async date => {
-    const bookingData = {
-      assign_time: selectedTime,
-      to_assign_time: selectedEndTime,
-      booking_date: date,
-      hall: hall,
-      contact_id: user.contact_id,
-      total_hour: formattedResult,
-      total_hour_per_rate: multipliedTimeDifference,
-    };
-
-    bookingDates.push(bookingData);
-
-    return api
-      .post('/booking/checkBookingExistence', bookingData)
-      .then((response) => {
-        if (response.data.msg === 'Booking already exists for this time slot and date.') {
-          conflicts.push(date);
-        } else {
-          return insertBooking(bookingData);
+    if (Array.isArray(selectedDates) && selectedDates.length > 1) {
+      const insertBooking = async (bookingData) => {
+        try {
+          const response = await api.post('/booking/insertBooking', bookingData);
+          if (response.status === 200) {
+            console.log('Booking inserted successfully');
+            setTimeout(() => {
+              navigation.navigate('HomeTab', { insertedData: bookingData });
+            }, 500);
+          } else {
+            console.error('Error in booking for date:', bookingData.booking_date);
+          }
+        } catch (error) {
+          console.error('Error in booking for date:', bookingData.booking_date, error);
         }
-      })
-      .catch((error) => {
-        console.error("AxiosError:", error);
+      };
+
+      const promises = selectedDates.map(async date => {
+        const bookingData = {
+          assign_time: selectedTime,
+          to_assign_time: selectedEndTime,
+          booking_date: date,
+          hall: hall,
+          contact_id: user.contact_id,
+          total_hour: formattedResult,
+          total_hour_per_rate: multipliedTimeDifference,
+        };
+
+        bookingDates.push(bookingData);
+
+        return api
+          .post('/booking/checkBookingExistence', bookingData)
+          .then((response) => {
+            if (response.data.msg === 'Booking already exists for this time slot and date.') {
+              conflicts.push(date);
+            } else {
+              return insertBooking(bookingData);
+            }
+          })
+          .catch((error) => {
+            console.error("AxiosError:", error);
+          });
       });
-  });
 
-  // Wait for all API requests to complete
-  Promise.all(promises)
-  .then(() => {
-    if (conflicts.length > 0) {
-      const conflictsMessage = 'Booking already exists for this time slot. Plase select other time slot.' ;
-      Alert.alert('Booking conflict', conflictsMessage);
-    } else {
-      const bookedDates = bookingDates.map((booking) => booking.booking_date).join(', ');
-      Alert.alert('Thank You for booking court', 'Booked for dates: ' + bookedDates);
-      setSelectedStartDate('');
-      setSelectedEndDate('');
-      setSelectedTime('');
-      setSelectedEndTime('');
-      SendEmailWeekly(bookingDates);
+      // Wait for all API requests to complete
+      Promise.all(promises)
+        .then(() => {
+          if (conflicts.length > 0) {
+            const conflictsMessage = 'Booking already exists for this time slot. Please select other time slot.';
+            Alert.alert('Booking conflict', conflictsMessage);
+          } else {
+            const bookedDates = bookingDates.map((booking) => booking.booking_date).join(', ');
+            Alert.alert('Thank You for booking court', 'Booked for dates: ' + bookedDates);
+            setSelectedStartDate('');
+            setSelectedEndDate('');
+            setSelectedTime('');
+            setSelectedEndTime('');
+            SendEmailWeekly(bookingDates);
+          }
+        });
+
     }
-  });
-
-}
     else if (selectedDates) {
 
       const bookingData = {
@@ -258,11 +269,15 @@ if (Array.isArray(selectedDates) && selectedDates.length > 1) {
         total_hour_per_rate: multipliedTimeDifference,
       };
 
+
+      console.log("bookingData Daily", bookingData)
+
       api.post('/booking/checkBookingExistence', bookingData)
         .then((response) => {
           if (response.data.msg === 'Booking already exists for this time slot and date.') {
             Alert.alert('Booking conflict', response.data.msg);
           } else {
+
             api
               .post('/booking/insertBooking', bookingData)
               .then(response => {
