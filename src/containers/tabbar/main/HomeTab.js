@@ -117,9 +117,6 @@ export default function HomeTab({ route }) {
         <EText type="B20" numberOfLines={1} color="#222" style={{ margin: 20 }}>
           Booking History
         </EText>
-        {/* <EText type="B14" numberOfLines={1} style={{ margin: 20, textDecorationLine: 'underline', }}>
-          View All
-        </EText> */}
       </View>
 
       <View style={[localStyles.loginBg, { flex: .7 }]}>
@@ -129,9 +126,9 @@ export default function HomeTab({ route }) {
             <FlatList
           data={DATA}
           renderItem={({ item, index }) => {
-            const imageSource = item.hall === 'court 1'
-              ? require('../../../assets/images/tumb.jpg')
-              : item.hall === 'court 2'
+            const imageSource = item.hall === 'Court 1'
+              ? require('../../../assets/images/court1.jpg')
+              : item.hall === 'Court 2'
                 ? require('../../../assets/images/court2.webp')
                 : require('../../../assets/images/tumb.jpg');
 
@@ -165,12 +162,8 @@ export default function HomeTab({ route }) {
         ) : (
           <Text>Book Your Court</Text>
         )}
-
-
       </View>
-
     </View>
-
   );
 }
 

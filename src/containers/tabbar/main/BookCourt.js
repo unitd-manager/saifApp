@@ -322,7 +322,7 @@ const BookCourt = ({ navigation, route }) => {
                 style={{
                   borderWidth: 1,
                   borderColor: colors.backgroundColor,
-                  height: 340,
+                  height: 360,
                   borderRadius: moderateScale(5),
                 }}
                 theme={{
