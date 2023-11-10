@@ -10,6 +10,7 @@ import SmallCardComponent from '../../../components/homeComponent/SmallCardCompo
 import EText from '../../../components/common/EText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deviceWidth, moderateScale } from '../../../common/constants';
+import moment from 'moment';
 
 export default function HomeTab({ route }) {
 
@@ -26,6 +27,12 @@ export default function HomeTab({ route }) {
   const contactId = user ? user.contact_id : null;
 
   const [DATA, setData] = useState([])
+
+  const isDatePassed = (date) => {
+    return moment(date, 'YYYY-DD-MM').isBefore(moment(), 'day');
+  };
+  // Filter the data to exclude items with past dates
+  const filteredData = DATA.filter((item) => !isDatePassed(item.booking_date));
 
   const fetchBookingContact = (contactId) => {
     api
@@ -117,27 +124,27 @@ export default function HomeTab({ route }) {
         <EText type="B20" numberOfLines={1} color="#222" style={{ margin: 20 }}>
           Booking History
         </EText>
-        {/* <EText type="B14" numberOfLines={1} style={{ margin: 20, textDecorationLine: 'underline', }}>
-          View All
-        </EText> */}
       </View>
 
       <View style={[localStyles.loginBg, { flex: .7 }]}>
 
         {contactId ? (
-          DATA.length > 0 ? (
+          filteredData.length > 0 ? (
             <FlatList
-          data={DATA}
+          data={filteredData}
           renderItem={({ item, index }) => {
-            const imageSource = item.hall === 'court 1'
-              ? require('../../../assets/images/tumb.jpg')
-              : item.hall === 'court 2'
+            const imageSource = item.hall === 'Court 1'
+              ? require('../../../assets/images/court1.jpg')
+              : item.hall === 'Court 2'
                 ? require('../../../assets/images/court2.webp')
                 : require('../../../assets/images/tumb.jpg');
 
+            const backgroundColor = isDatePassed(item.booking_date) ? 'red' : item.color;
+
+
             return (
-              <View style={localStyles.item}>
-                <Image
+              <View style={[localStyles.item, { backgroundColor }]}>
+              <Image
                     style={[localStyles.circular, { backgroundColor: item.color }]}
                     source={imageSource}
                   />
@@ -165,12 +172,8 @@ export default function HomeTab({ route }) {
         ) : (
           <Text>Book Your Court</Text>
         )}
-
-
       </View>
-
     </View>
-
   );
 }
 
