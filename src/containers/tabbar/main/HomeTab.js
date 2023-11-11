@@ -11,6 +11,7 @@ import EText from '../../../components/common/EText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deviceWidth, moderateScale } from '../../../common/constants';
 import moment from 'moment';
+import InAppUpdate from '../../../../InAppUpdate'
 
 export default function HomeTab({ route }) {
 
@@ -100,6 +101,9 @@ export default function HomeTab({ route }) {
     CourtAmmount();
   },[])
 
+  useEffect(()=>{
+    InAppUpdate.checkUpdate()
+  },[])
 
   const renderCategoryItem = ({item, index}) => {
     return <SmallCardComponent item={item} key={index} user={user} />;

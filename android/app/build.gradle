@@ -160,7 +160,6 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}")
@@ -174,6 +173,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'com.google.android.play:core:1.7.3'
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
