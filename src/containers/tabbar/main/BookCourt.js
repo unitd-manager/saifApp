@@ -224,9 +224,9 @@ const BookCourt = ({ navigation, route }) => {
           total_hour: formattedResult,
           total_hour_per_rate: multipliedTimeDifference,
         };
-
+      
         bookingDates.push(bookingData);
-
+      
         return api
           .post('/booking/checkBookingExistence', bookingData)
           .then((response) => {
@@ -240,23 +240,75 @@ const BookCourt = ({ navigation, route }) => {
             console.error("AxiosError:", error);
           });
       });
-
-      // Wait for all API requests to complete
+      
       Promise.all(promises)
-        .then(() => {
-          if (conflicts.length > 0) {
-            const conflictsMessage = 'Booking already exists for this time slot. Please select other time slot.';
-            Alert.alert('Booking conflict', conflictsMessage);
-          } else {
-            const bookedDates = bookingDates.map((booking) => booking.booking_date).join(', ');
-            Alert.alert('Thank You for booking court', 'Booked for dates: ' + bookedDates);
-            setSelectedStartDate('');
-            setSelectedEndDate('');
-            setSelectedTime('');
-            setSelectedEndTime('');
-            SendEmailWeekly(bookingDates);
-          }
-        });
+      .then(() => {
+        if (conflicts.length > 0) {
+          const conflictsMessage = 'Booking already exists for these dates: ' + conflicts.join(', ');
+    
+          Alert.alert(
+            'Booking conflict',
+            conflictsMessage,
+            [
+              {
+                text: 'Proceed with other dates',
+                onPress: () => {
+                  // Filter out the conflicting dates from bookingDates
+                  const remainingDates = bookingDates.filter(booking => !conflicts.includes(booking.booking_date));
+    
+                  if (remainingDates.length > 0) {
+                    const bookedDates = remainingDates.map((booking) => booking.booking_date).join(', ');
+                    Alert.alert(
+                      'Thank You for booking court',
+                      'Booked for dates: ' + bookedDates,
+                      [
+                        {
+                          text: 'OK',
+                          onPress: () => {
+                            setSelectedStartDate('');
+                            setSelectedEndDate('');
+                            setSelectedTime('');
+                            setSelectedEndTime('');
+                            SendEmailWeekly(remainingDates);
+                          },
+                        },
+                      ],
+                      { cancelable: false }
+                    );
+                  }
+                },
+              },
+              // {
+              //   text: 'Cancel',
+              //   style: 'cancel',
+              //   onPress: () => {
+                 
+              //   },
+              // },
+            ],
+            { cancelable: false }
+          );
+        } else {
+          const bookedDates = bookingDates.map((booking) => booking.booking_date).join(', ');
+          Alert.alert(
+            'Thank You for booking court',
+            'Booked for dates: ' + bookedDates,
+            [
+              {
+                text: 'OK',
+                onPress: () => {
+                  setSelectedStartDate('');
+                  setSelectedEndDate('');
+                  setSelectedTime('');
+                  setSelectedEndTime('');
+                  SendEmailWeekly(bookingDates);
+                },
+              },
+            ],
+            { cancelable: false }
+          );
+        }
+      });
 
     }
     else {
