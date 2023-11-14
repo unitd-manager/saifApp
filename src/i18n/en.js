@@ -12,6 +12,7 @@ export default {
   createYourAccount: 'Create Your Account',
   email: 'Email',
   password: 'Password',
+  forgotPass: 'forgot Password?',
   AlreadyHaveAccount: 'Already have an account?',
   Login: 'Login',
   signIn: 'Login',

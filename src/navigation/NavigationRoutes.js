@@ -8,6 +8,7 @@ import WelcomeScreen from '../containers/WelcomeScreen';
 import OnBoarding from '../containers/OnBoarding';
 import Login from '../containers/auth/Login';
 import SignUp from '../containers/auth/SignUp';
+import ForgotPass from '../containers/auth/ForgotPass';
 import TabBar from './Type/TabBarNavigation';
 import Connect from '../containers/auth/Connect';
 import SelfieWithId from '../containers/auth/SelfieWithId';
@@ -26,6 +27,7 @@ export const StackRoute = {
   OnBoarding,
   Login,
   SignUp,
+  ForgotPass,
   TabBar,
   Connect,
   SelfieWithId,
