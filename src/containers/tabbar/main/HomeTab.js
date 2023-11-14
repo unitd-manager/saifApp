@@ -101,9 +101,9 @@ export default function HomeTab({ route }) {
     CourtAmmount();
   },[])
 
-  useEffect(()=>{
-    InAppUpdate.checkUpdate()
-  },[])
+  // useEffect(()=>{
+  //   InAppUpdate.checkUpdate()
+  // },[])
 
   const renderCategoryItem = ({item, index}) => {
     return <SmallCardComponent item={item} key={index} user={user} />;
