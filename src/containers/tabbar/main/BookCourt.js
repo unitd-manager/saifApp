@@ -112,11 +112,11 @@ const BookCourt = ({ navigation, route }) => {
       return;
     } else {
       setSelectedEndTime(endTime);
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        left: 0,
-        behavior: "smooth",
-      });
+      // window.scrollTo({
+      //   top: document.documentElement.scrollHeight,
+      //   left: 0,
+      //   behavior: "smooth",
+      // });
     }
   };
 

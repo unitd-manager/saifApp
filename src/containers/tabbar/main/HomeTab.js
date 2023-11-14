@@ -11,7 +11,7 @@ import EText from '../../../components/common/EText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deviceWidth, moderateScale } from '../../../common/constants';
 import moment from 'moment';
-import InAppUpdate from '../../../../InAppUpdate'
+// import InAppUpdate from '../../../../InAppUpdate'
 
 export default function HomeTab({ route }) {
 
@@ -143,11 +143,11 @@ export default function HomeTab({ route }) {
                 ? require('../../../assets/images/court2.webp')
                 : require('../../../assets/images/tumb.jpg');
 
-            const backgroundColor = isDatePassed(item.booking_date) ? 'red' : item.color;
+            // const backgroundColor = isDatePassed(item.booking_date) ? 'red' : item.color;
 
 
             return (
-              <View style={{backgroundColor, width:'100%'}}>
+              <View style={{width:'100%'}}>
                 <View style={[localStyles.item]}>
                 <Image
                       style={[localStyles.circular, { backgroundColor: item.color }]}

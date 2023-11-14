@@ -13,6 +13,7 @@ export const StackNav = {
   Connect: 'Connect',
   Login: 'Login',
   SignUp: 'SignUp',
+  ForgotPass: 'ForgotPass',
   Language: 'Language',
   Search: 'Search',
   MainHome: 'HomeTab',

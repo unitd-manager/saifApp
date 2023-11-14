@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 
 // Local Imports
 import strings from '../../i18n/strings';
-import { colors, styles } from '../../themes';
+import { styles } from '../../themes';
 import { getHeight, moderateScale } from '../../common/constants';
 import ESafeAreaView from '../../components/common/ESafeAreaView';
 import EInput from '../../components/common/EInput';
@@ -143,7 +143,9 @@ const Login = () => {
   const onPressSignIn = () => {
     navigation.navigate(StackNav.SignUp);
   };
-
+  const onPressForgotPass = () => { 
+    navigation.navigate(StackNav.ForgotPass);
+  };
   return (
     <ESafeAreaView style={localStyles.root}>
       {/* <EHeader isHideBack/> */}
@@ -225,6 +227,15 @@ const Login = () => {
                 </EText>
               </TouchableOpacity>
 
+              <TouchableOpacity
+                onPress={onPressForgotPass}
+                style={localStyles.signUpContainer}>
+                <EText
+                  type={'b16'}
+                  color={colors.dark ? colors.grayScale7 : colors.grayScale5}>
+                  {strings.forgotPass}
+                </EText>
+              </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>

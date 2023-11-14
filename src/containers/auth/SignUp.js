@@ -15,7 +15,6 @@ import { validateEmail } from '../../utils/validators';
 import KeyBoardAvoidWrapper from '../../components/common/KeyBoardAvoidWrapper';
 import EButton from '../../components/common/EButton';
 import api from '../../api/api';
-import AuthContext from "../../navigation/Type/Auth";
 import { useNavigation } from '@react-navigation/native'
 import EText from '../../components/common/EText';
 import { StackNav } from '../../navigation/NavigationKeys';
@@ -54,7 +53,6 @@ const SignUp = () => {
     const [passwordInputStyle, setPasswordInputStyle] = useState(BlurredStyle);
     const [conpasswordInputStyle, setConPasswordInputStyle] = useState(BlurredStyle);
     const [isPasswordVisible, setIsPasswordVisible] = useState(true);
-    const { signIn } = useContext(AuthContext)
 
     const onFocusInput = onHighlight => onHighlight(FocusedStyle);
     const onFocusIcon = onHighlight => onHighlight(FocusedIconStyle);
@@ -74,9 +72,7 @@ const SignUp = () => {
         }
     }, [email, password, emailError, passwordError]);
 
-
-
-// onChanged
+    // onChanged
     const onChangedName = val1 => {
         // const { msg } = validateEmail(val.trim());
         setName(val1.trim());
@@ -105,27 +101,26 @@ const SignUp = () => {
 
 
     const Insert = () => {
-        console.log(name,email,password,phone)
         if (!name || !email || !password || !phone) {
             Alert.alert('Please fill in all fields');
             return;
         }
-    
+
         const registerData = {
             first_name: name,
             email: email,
             password: password,
             mobile: phone,
         };
-    
+
         api
             .post('/api/register', registerData)
             .then(response => {
                 if (response.status === 200) {
                     setTimeout(() => {
                         SendEmail();
-                      }, 500);
-                
+                    }, 500);
+
                 } else {
                     console.error('Error');
                 }
@@ -133,27 +128,27 @@ const SignUp = () => {
             .catch(error => {
                 console.error('Error:', error);
             }
-            
+
             );
-           
+
     };
-    
-    const SendEmail =()=>{
+
+    const SendEmail = () => {
         const to = email;
         const subject = "Saif Registration";
-          api
-        .post('/commonApi/sendUseremail', {to,subject})
-        .then(response => {
-            if (response.status === 200) {
-                Alert.alert('You have successfully registered');
-                setTimeout(() => {
-                   navigation.navigate(StackNav.Login)
-                  }, 500);
-            } else {
-                console.error('Error');
-            }
-        })
-    } 
+        api
+            .post('/commonApi/sendUseremail', { to, subject })
+            .then(response => {
+                if (response.status === 200) {
+                    Alert.alert('You have successfully registered');
+                    setTimeout(() => {
+                        navigation.navigate(StackNav.Login)
+                    }, 500);
+                } else {
+                    console.error('Error');
+                }
+            })
+    }
     // Icons
     const EmailIcon = () => {
         return <Ionicons name="mail" size={moderateScale(20)} color={'black'} />;
@@ -209,7 +204,7 @@ const SignUp = () => {
         onBlurIcon(setPasswordIcon);
     };
 
-     
+
     const PasswordIcon = () => (
         <Ionicons
             name="lock-closed"
@@ -351,17 +346,15 @@ const SignUp = () => {
                                 rightAccessory={() => <RightPasswordEyeIcon />}
                             />
 
-
                             <EButton
                                 title="SignUp"
                                 type={'S16'}
                                 color={isSubmitDisabled && colors.white}
                                 containerStyle={localStyles.signBtnContainer}
-                                // onPress={onPressSignWithPassword}
-                                onPress={(event) =>{ Insert(event) 
-                                        //   SendEmail(event)
-                                        }
-                                        }
+                                onPress={(event) => {
+                                    Insert(event)
+                                }
+                                }
                                 bgColor={isSubmitDisabled && colors.primary5}
                             />
 
