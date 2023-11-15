@@ -39,19 +39,18 @@ const TimePicker = ({ setSelectedTime, setSelectedEndTime }) => {
 
   const renderTimeOption = ({ item }) => (
     <TouchableOpacity style={styles.timeOption} onPress={() => handleHourChange(item.value)}>
-      <Text>{item.label}</Text>
+      <Text style={{ fontWeight: '600',color:'#333' }}>{item.label}</Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.timeButton} onPress={showTimepicker}>
-        <Text style={{ fontWeight: '600' }}>Select Time</Text>
+        <Text style={{ fontWeight: '600',color:'#333' }}>Select Time</Text>
       </TouchableOpacity>
       {selectedHour && (
         <>
         </>
-        // <Text style={styles.selectedTimeText}>Selected Time: {selectedHour}:00</Text>
       )}
       <Modal transparent visible={isTimePickerVisible} onRequestClose={hideTimepicker}>
         <TouchableWithoutFeedback onPress={hideTimepicker}>
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
     right: '10%', // Adjusted position
   },
   flatList: {
-    maxHeight: 200,
+    maxHeight: 200, 
   },
   timeOption: {
     padding: 20,
