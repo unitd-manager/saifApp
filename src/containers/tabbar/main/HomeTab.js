@@ -1,6 +1,8 @@
 import { StyleSheet, View, Text, FlatList, Image,TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import { StackNav } from '../../../navigation/NavigationKeys';
 import { FlashList } from '@shopify/flash-list';
 import { Tournament } from '../../../assets/svgs';
 import { styles } from '../../../themes';
@@ -11,10 +13,11 @@ import EText from '../../../components/common/EText';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deviceWidth, moderateScale } from '../../../common/constants';
 import moment from 'moment';
+import EButton from '../../../components/common/EButton';
 // import InAppUpdate from '../../../../InAppUpdate'
 
 export default function HomeTab({ route }) {
-
+  const navigation = useNavigation();
   const colors = useSelector(state => state.theme.theme);
   const [extraData, setExtraData] = useState(true);
   const [user, setUserData] = useState();
@@ -193,9 +196,30 @@ const RenderHeaderItem = React.memo(() => {
         </View>
         <Tournament width={moderateScale(70)} height={moderateScale(70)} />
       </View>
+      <View style={{ marginTop: 10 }} >
+      {/* Existing code */}
+      <EButton style={{ marginTop: 20 }}
+       onPress={() => navigation.navigate(StackNav.VideoGallery)}>
+        <EText type="m16" numberOfLines={1} color={'#fff'}>
+        Our Video
+        </EText>
+      </EButton>
+
+      {/* New EButton */}
+      <EButton style={{ marginTop: 20 }}
+      >
+        
+        <EText type="m16" numberOfLines={1} color={'#fff'}>
+          Our Image
+        </EText>
+      </EButton>
+
+      {/* Remaining code */}
+    </View>
       <EText type="B20" color="#222" style={{ marginTop: 20 }}>
         Our Court
       </EText>
+      
     </View>
   );
 });

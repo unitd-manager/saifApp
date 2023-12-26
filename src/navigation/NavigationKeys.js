@@ -1,3 +1,4 @@
+
 export const TabNav = {
   ExploreTab: 'ExploreTab',
   FavoritesTab: 'FavoritesTab',
@@ -18,5 +19,6 @@ export const StackNav = {
   Search: 'Search',
   MainHome: 'HomeTab',
   BookCourt: 'BookCourt',
-  Sucess: 'Sucess'
+  Sucess: 'Sucess',
+  VideoGallery:'VideoGallery'
 };

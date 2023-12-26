@@ -5,6 +5,7 @@ import AuthStack from './AuthStack';
 import AuthContext, {defaultState, reducer, restoreToken} from './Auth';
 import HomeTab from '../../containers/tabbar/main/HomeTab';
 import BookCourt from '../../containers/tabbar/main/BookCourt';
+import VideoGallery from '../../containers/tabbar/main/VideoGallery';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ export default function StackNavigation() {
             <>
               <Stack.Screen name={StackNav.MainHome} component={HomeTab} />
               <Stack.Screen name={StackNav.BookCourt} component={BookCourt} />
+              <Stack.Screen name={StackNav.VideoGallery} component={VideoGallery} />
             </>
             
           )}

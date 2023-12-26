@@ -15,6 +15,7 @@ import SelfieWithId from '../containers/auth/SelfieWithId';
 import HomeListCard from '../containers/tabbar/HomeListCard';
 import BookCourt from '../containers/tabbar/main/BookCourt';
 import Sucess from '../containers/tabbar/main/Sucess';
+import VideoGallery from '../containers/tabbar/main/VideoGallery';
 
 export const TabRoute = {
   // MainHome,
@@ -33,5 +34,6 @@ export const StackRoute = {
   SelfieWithId,
   HomeListCard,
   BookCourt,
-  Sucess
+  Sucess,
+  VideoGallery,
 };
