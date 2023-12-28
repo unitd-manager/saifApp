@@ -5,37 +5,6 @@ import EI from 'react-native-vector-icons/EvilIcons';
 import WebView from 'react-native-webview';
 import api from '../../../api/api';
 
-// const videos = [
-//   {
-//     id: '1',
-//     title: 'Video 1',
-//     categ: 'Arts & Culture',
-//     url: 'Ntkt06bD698',
-//     imag: require('../../../assets/images/ArtsCulture.jpg'),
-//   },
-//   {
-//     id: '2',
-//     title: 'Video 2',
-//     categ: 'Arts & Culture',
-//     url: 'd5fMOEodxc4',
-//     imag: require('../../../assets/images/hqdefault.jpg'),
-//   },
-//   {
-//     id: '3',
-//     title: 'Video 3',
-//     categ: 'Arts & Culture',
-//     url: 'a_mdVd9MdGA',
-//     imag: require('../../../assets/images/ArtsCulture.jpg'),
-//   },
-//   {
-//     id: '4',
-//     title: 'Video 4',
-//     categ: 'Arts & Culture',
-//     url: 'DxSUVXEmt4E',
-//     imag: require('../../../assets/images/hqdefault.jpg'),
-//   },
-// ];
-
 const VideoGallery = () => {
 
   const [videos, setVideos] = useState([])
