@@ -5,7 +5,9 @@ import AuthStack from './AuthStack';
 import AuthContext, {defaultState, reducer, restoreToken} from './Auth';
 import HomeTab from '../../containers/tabbar/main/HomeTab';
 import BookCourt from '../../containers/tabbar/main/BookCourt';
-import VideoGallery from '../../containers/tabbar/main/VideoGallery';
+import VideoGallery from '../../containers/tabbar/main/VideoGallery'
+import PhotoGallery from '../../containers/tabbar/main/PhotoGallery';
+import ShowImage from '../../components/ShowImage';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,8 +44,9 @@ export default function StackNavigation() {
               <Stack.Screen name={StackNav.MainHome} component={HomeTab} />
               <Stack.Screen name={StackNav.BookCourt} component={BookCourt} />
               <Stack.Screen name={StackNav.VideoGallery} component={VideoGallery} />
+              <Stack.Screen name={StackNav.PhotoGallery} component={PhotoGallery} />
+              <Stack.Screen name={StackNav.ShowImage} component={ShowImage} options={{headerShown : false}} />
             </>
-            
           )}
     </Stack.Navigator>
     </AuthContext.Provider>

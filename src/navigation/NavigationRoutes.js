@@ -16,6 +16,8 @@ import HomeListCard from '../containers/tabbar/HomeListCard';
 import BookCourt from '../containers/tabbar/main/BookCourt';
 import Sucess from '../containers/tabbar/main/Sucess';
 import VideoGallery from '../containers/tabbar/main/VideoGallery';
+import PhotoGallery from '../containers/tabbar/main/PhotoGallery';
+import ShowImage from '../components/ShowImage';
 
 export const TabRoute = {
   // MainHome,
@@ -36,4 +38,6 @@ export const StackRoute = {
   BookCourt,
   Sucess,
   VideoGallery,
+  PhotoGallery,
+  ShowImage,
 };

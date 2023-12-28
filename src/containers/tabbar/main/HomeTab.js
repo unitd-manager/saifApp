@@ -1,7 +1,7 @@
-import { StyleSheet, View, Text, FlatList, Image,TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, FlatList, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { StackNav } from '../../../navigation/NavigationKeys';
 import { FlashList } from '@shopify/flash-list';
 import { Tournament } from '../../../assets/svgs';
@@ -14,7 +14,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { deviceWidth, moderateScale } from '../../../common/constants';
 import moment from 'moment';
 import EButton from '../../../components/common/EButton';
-// import InAppUpdate from '../../../../InAppUpdate'
 
 export default function HomeTab({ route }) {
   const navigation = useNavigation();
@@ -100,15 +99,15 @@ export default function HomeTab({ route }) {
       });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     CourtAmmount();
-  },[])
+  }, [])
 
   // useEffect(()=>{
   //   InAppUpdate.checkUpdate()
   // },[])
 
-  const renderCategoryItem = ({item, index}) => {
+  const renderCategoryItem = ({ item, index }) => {
     return <SmallCardComponent item={item} key={index} user={user} />;
   };
 
@@ -138,41 +137,41 @@ export default function HomeTab({ route }) {
         {contactId ? (
           DATA.length > 0 ? (
             <FlatList
-          data={DATA}
-          renderItem={({ item, index }) => {
-            const imageSource = item.hall === 'Court 1'
-              ? require('../../../assets/images/court1.jpg')
-              : item.hall === 'Court 2'
-                ? require('../../../assets/images/court2.webp')
-                : require('../../../assets/images/tumb.jpg');
+              data={DATA}
+              renderItem={({ item, index }) => {
+                const imageSource = item.hall === 'Court 1'
+                  ? require('../../../assets/images/court1.jpg')
+                  : item.hall === 'Court 2'
+                    ? require('../../../assets/images/court2.webp')
+                    : require('../../../assets/images/tumb.jpg');
 
-            // const backgroundColor = isDatePassed(item.booking_date) ? 'red' : item.color;
+                // const backgroundColor = isDatePassed(item.booking_date) ? 'red' : item.color;
 
 
-            return (
-              <View style={{width:'100%'}}>
-                <View style={[localStyles.item]}>
-                <Image
-                      style={[localStyles.circular, { backgroundColor: item.color }]}
-                      source={imageSource}
-                    />
-                  <View style={localStyles.itemLeft}>
-                      <View style={localStyles.containerRow}>
-                        <Text style={localStyles.heading}>{item.hall}</Text>
-                        <Text style={localStyles.power}>{item.payment_status}</Text>
+                return (
+                  <View style={{ width: '100%' }}>
+                    <View style={[localStyles.item]}>
+                      <Image
+                        style={[localStyles.circular, { backgroundColor: item.color }]}
+                        source={imageSource}
+                      />
+                      <View style={localStyles.itemLeft}>
+                        <View style={localStyles.containerRow}>
+                          <Text style={localStyles.heading}>{item.hall}</Text>
+                          <Text style={localStyles.power}>{item.payment_status}</Text>
+                        </View>
+                        <View style={localStyles.containerRow}>
+                          <Text style={localStyles.power}>{item.booking_date.split('-').reverse().join('-')}</Text>
+                          <Text style={localStyles.power}>{item.assign_time}</Text>
+                          <Text style={localStyles.power}>{item.to_assign_time}</Text>
+                        </View>
                       </View>
-                      <View style={localStyles.containerRow}>
-                        <Text style={localStyles.power}>{item.booking_date.split('-').reverse().join('-')}</Text>
-                        <Text style={localStyles.power}>{item.assign_time}</Text>
-                        <Text style={localStyles.power}>{item.to_assign_time}</Text>
-                      </View>
+                    </View>
                   </View>
-                </View>
-              </View>
-            );
-          }}
-          keyExtractor={(item) => item.contact_id.toString()}
-        /> 
+                );
+              }}
+              keyExtractor={(item) => item.contact_id.toString()}
+            />
           ) : (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <EText type="m20" numberOfLines={1} color={'#fff'}> No Booking Records Found </EText>
@@ -187,6 +186,7 @@ export default function HomeTab({ route }) {
 }
 
 const RenderHeaderItem = React.memo(() => {
+  const navigation = useNavigation();
   return (
     <View>
       <View style={localStyles.card}>
@@ -196,30 +196,28 @@ const RenderHeaderItem = React.memo(() => {
         </View>
         <Tournament width={moderateScale(70)} height={moderateScale(70)} />
       </View>
-      <View style={{ marginTop: 10 }} >
-      {/* Existing code */}
-      <EButton style={{ marginTop: 20 }}
-       onPress={() => navigation.navigate(StackNav.VideoGallery)}>
-        <EText type="m16" numberOfLines={1} color={'#fff'}>
-        Our Video
-        </EText>
-      </EButton>
 
-      {/* New EButton */}
-      <EButton style={{ marginTop: 20 }}
-      >
-        
-        <EText type="m16" numberOfLines={1} color={'#fff'}>
-          Our Image
-        </EText>
-      </EButton>
+      <View style={localStyles.buttonContainer}>
+        <EButton
+          containerStyle={localStyles.skipBtnContainer}
+          onPress={() => navigation.navigate(StackNav.VideoGallery)}>
+          <EText type="m16" numberOfLines={1} color={'#fff'} >
+            Our Video
+          </EText>
+        </EButton>
 
-      {/* Remaining code */}
-    </View>
+        <EButton containerStyle={localStyles.skipBtnContainer}
+        onPress={() => navigation.navigate(StackNav.PhotoGallery)}>
+          <EText type="m16" numberOfLines={1} color={'#fff'}>
+            Our Image
+          </EText>
+        </EButton>
+      </View>
+
       <EText type="B20" color="#222" style={{ marginTop: 20 }}>
         Our Court
       </EText>
-      
+
     </View>
   );
 });
@@ -234,16 +232,16 @@ const localStyles = StyleSheet.create({
     width: (deviceWidth - moderateScale(120)) / 2,
     ...styles.mt15,
     borderRadius: moderateScale(10),
-    backgroundColor:'#000'
+    backgroundColor: '#000'
   },
   contentContainerStyle: {
     ...styles.ph20,
     ...styles.pb20,
   },
-  containerRow:{
-    display: 'flex', 
+  containerRow: {
+    display: 'flex',
     flexDirection: 'row',
-    justifyContent:'space-between',
+    justifyContent: 'space-between',
   },
   card: {
     backgroundColor: '#13458cbd',
@@ -274,7 +272,7 @@ const localStyles = StyleSheet.create({
     borderBottomWidth: 0.5
   },
   itemLeft: {
-    width:'80%'
+    width: '80%'
   },
   heading: {
     fontSize: 16,
@@ -297,5 +295,13 @@ const localStyles = StyleSheet.create({
   },
   history: {
     display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20
+  },
+  skipBtnContainer: {
+    width: '45%',
   }
 });

@@ -20,5 +20,7 @@ export const StackNav = {
   MainHome: 'HomeTab',
   BookCourt: 'BookCourt',
   Sucess: 'Sucess',
-  VideoGallery:'VideoGallery'
+  VideoGallery:'VideoGallery',
+  PhotoGallery: 'PhotoGallery',
+  ShowImage: 'ShowImage',
 };
